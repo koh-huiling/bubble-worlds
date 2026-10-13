@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#fde6ec">
+<meta name="theme-color" content="#1f2a5c">
 <style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}[hidden]{display:none!important}</style>
 <title>Bubble Worlds</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Baloo+2:wght@800&family=Patrick+Hand&family=Grandstander:wght@800&family=Dela+Gothic+One&family=Nunito:wght@700;800;900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Righteous&family=Baloo+2:wght@800&family=Patrick+Hand&family=Grandstander:wght@800&family=Dela+Gothic+One&family=Nunito:wght@700;800;900&display=swap">
 <style>
 /* Layout: one-screen game. A slim HUD in the chosen world's type and color, the tall board scaled to fit, a world picker over the board.
    Each world is its own single visual look, so tokens are swapped per world by script instead of by light/dark theme. */
@@ -116,12 +116,62 @@ html.phone-land .card h2, html.phone-land .menu-title{font-size:1.25rem}
 html.phone-land .card{gap:6px; padding:12px 10px}
 html.phone-land .btn.big{font-size:1rem; padding:9px 18px}
 html.phone-land .hint{display:none}
+/* Landing page (main menu): a dusk sky with drifting hot-air balloons. One fixed look, the same in every world. */
+.landing{position:fixed; inset:0; z-index:50; overflow:hidden; display:flex; flex-direction:column; color:#ffffff; font-family:var(--body);
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+  background:linear-gradient(180deg, #1f2a5c 0%, #4b3f7a 42%, #c8735a 74%, #f4a259 100%);
+  --page:rgba(255,255,255,.1); --ink:#ffffff; --muted:#d9d2f5; --title:#ffffff; --title-shadow:none; --chip:rgba(255,255,255,.1);
+  --edge:rgba(255,255,255,.38); --accent:#f4a259; --accent-ink:#1f2a5c; --display:"Righteous","Nunito",ui-rounded,sans-serif}
+.ld-stars{position:absolute; left:6%; top:5%; width:3px; height:3px; border-radius:50%; background:#ffffff;
+  box-shadow:60px 30px 0 #fff, 140px 8px 0 rgba(255,255,255,.7), 220px 46px 0 #fff, 300px 18px 0 rgba(255,255,255,.7), 330px 70px 0 #fff, 100px 90px 0 rgba(255,255,255,.6), 400px 40px 0 rgba(255,255,255,.6)}
+.ld-balloon{position:absolute; animation:ld-float var(--d,7s) ease-in-out var(--dl,0s) infinite}
+.ld-balloon svg{display:block; width:100%; height:100%}
+@keyframes ld-float{0%,100%{transform:translateY(0) rotate(-1.5deg)} 50%{transform:translateY(-12px) rotate(1.5deg)}}
+.ld-hills{position:absolute; left:0; bottom:0; width:100%; height:40%}
+.ld-inner{position:relative; flex:1; min-height:0; width:100%; max-width:440px; margin:0 auto; box-sizing:border-box; padding:64px 24px 26px; display:flex; flex-direction:column; gap:12px}
+.ld-head{text-align:center; display:flex; flex-direction:column; gap:8px}
+.ld-title{margin:0; font-family:"Righteous","Nunito",sans-serif; font-weight:400; font-size:50px; line-height:1; text-wrap:balance}
+.ld-sub{margin:0; font-size:15px; font-weight:800; color:#ffd9b0}
+.ld-panel{margin-top:auto; display:flex; flex-direction:column; gap:12px}
+.ld-btn{width:100%; height:56px; border-radius:999px; border:1.5px solid rgba(255,255,255,.4); background:rgba(255,255,255,.12); color:#ffffff;
+  font:900 18px var(--body); cursor:pointer; -webkit-backdrop-filter:blur(4px); backdrop-filter:blur(4px)}
+.ld-btn:hover{background:rgba(255,255,255,.2)}
+.ld-btn.primary{height:60px; border:0; background:#f4a259; color:#1f2a5c; font-family:"Righteous","Nunito",sans-serif; font-weight:400; font-size:24px; box-shadow:0 8px 24px -8px rgba(244,162,89,.9)}
+.ld-btn.primary:hover{background:#f7b273}
+.ld-btn:focus-visible{outline:3px solid #ffffff; outline-offset:3px}
+.ld-foot{margin:2px 0 0; text-align:center; font-size:12px; font-weight:800; color:#e3dcff}
+.ld-tip{margin:0; text-align:center; font-size:11px; font-weight:700; color:#cfc8ee}
+.ld-card{display:flex; flex-direction:column; gap:10px; padding:18px 16px; border-radius:24px; background:rgba(31,42,92,.62); border:1px solid rgba(255,255,255,.25);
+  -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px)}
+.ld-card h3{margin:0; text-align:center; font-family:"Righteous","Nunito",sans-serif; font-weight:400; font-size:28px}
+.ld-card p{margin:0; text-align:center; font-size:14px; font-weight:700; line-height:1.45; color:#e3dcff}
+.ld-card .row{display:flex; gap:8px; justify-content:center; flex-wrap:wrap}
+html.phone-land .ld-inner{max-width:none; flex-direction:row; align-items:center; gap:24px; padding:20px 28px}
+html.phone-land .ld-head{flex:1}
+html.phone-land .ld-panel{flex:1; margin-top:0; max-width:340px}
+html.phone-land .ld-title{font-size:40px}
+@media (prefers-reduced-motion: reduce){ .ld-balloon{animation:none} }
 @media (prefers-reduced-motion: reduce){ .card{animation:none} .world:hover{transform:none} }
 </style>
 </head>
 <body>
 
 <div class="app">
+  <div class="landing" id="landing" hidden>
+    <div class="ld-stars" aria-hidden="true"></div>
+    <div id="ldBalloons" aria-hidden="true"></div>
+    <svg class="ld-hills" viewBox="0 0 390 324" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 120 Q90 40 190 110 Q290 170 390 90 L390 324 L0 324 Z" fill="#3b2f63"></path>
+      <path d="M0 190 Q120 120 230 180 Q320 220 390 170 L390 324 L0 324 Z" fill="#26214a"></path>
+    </svg>
+    <div class="ld-inner">
+      <div class="ld-head">
+        <h2 class="ld-title">Bubble Worlds</h2>
+        <p class="ld-sub">Pop your way across five worlds</p>
+      </div>
+      <div class="ld-panel" id="ldPanel"></div>
+    </div>
+  </div>
   <header>
     <h1 id="title">Bubble Worlds</h1>
     <div class="stats">
@@ -501,6 +551,7 @@ const ctx = canvas.getContext('2d');
 const stage = document.getElementById('stage');
 const overlay = document.getElementById('overlay');
 const card = document.getElementById('card');
+const landing = document.getElementById('landing'), ldPanel = document.getElementById('ldPanel');
 const $title = document.getElementById('title');
 const $score = document.getElementById('score'), $level = document.getElementById('level'), $best = document.getElementById('best');
 const bgCanvas = document.createElement('canvas'), bctx = bgCanvas.getContext('2d');
@@ -582,6 +633,7 @@ function applyUi(){
   if (shortSide > 0 && shortSide < 700 && deviceW > 0 && iw > deviceW * 1.25) k = iw / deviceW;
   uiK = k;
   const ew = iw / k, eh = ih / k, root = document.documentElement;
+  landing.style.setProperty('--bs', Math.max(.8, Math.min(1.5, ew / 390)).toFixed(3));
   root.classList.toggle('phone-ui', ew <= 560 && !(ew > eh && eh <= 520));
   root.classList.toggle('phone-land', ew > eh && eh <= 520);
   root.classList.toggle('short-ui', eh <= 560);
@@ -803,6 +855,7 @@ function reskin(){
 
 // ---------- overlays ----------
 function showCard(html, buttons){
+  landing.hidden = true;
   card.innerHTML = html + '<div class="row">' + buttons.map((b, i) =>
     `<button class="btn${b.ghost ? ' ghost' : ''}" id="ovb${i}" type="button">${b.label}</button>`).join('') + '</div>';
   overlay.hidden = false;
@@ -810,7 +863,7 @@ function showCard(html, buttons){
   document.getElementById('ovb0').focus({ preventScroll:true });
 }
 function play(fromLevel){
-  overlay.hidden = true;
+  overlay.hidden = true; landing.hidden = true;
   if (fromLevel){ score = 0; combo = 0; setupLevel(1); }
   state = 'play'; hud(); saveGame();
   canvas.focus({ preventScroll:true });
@@ -819,19 +872,46 @@ function play(fromLevel){
 const esc = s => String(s).replace(/[&<>"]/g, ch => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[ch]));
 function inGameNow(){ return state === 'play' || (state === 'pick' && pickerResumable) || (state === 'menu' && menuResumable); }
 function bind(id, fn){ const el = document.getElementById(id); if (el) el.addEventListener('click', () => { audio(); fn(el); }); return el; }
+// ---------- landing page: dusk sky, hot-air balloons, menu panel ----------
+const BALLOONS = [
+  // left %, top %, width px, canopy, stripe, band, opacity, float seconds, delay
+  [59.5, 20.9, 100, '#ffc94a', '#fff2d0', '#c9921c', 1, 7.5, 0],
+  [11.3, 25.4, 70, '#4fd1c5', '#e8fbf8', '#2a9d93', 1, 6.5, -2],
+  [38.5, 34.4, 48, '#ff7a59', '#ffe1d6', '#c9512f', .95, 8, -4],
+  [81.5, 40.3, 36, '#5aa9ff', '#e2efff', '#2f74cc', .9, 9, -1],
+  [28.2, 20.9, 26, '#9be15d', '#effbe3', '#5f9e2a', .8, 10, -6],
+  [5.1, 42.7, 22, '#ffc94a', '#fff2d0', '#c9921c', .75, 11, -3]
+];
+function balloonSvg(c1, c2, c3){
+  return `<svg viewBox="0 0 60 90"><path d="M30 2 C12 2 2 16 2 32 C2 48 18 58 24 66 L36 66 C42 58 58 48 58 32 C58 16 48 2 30 2 Z" fill="${c1}"/>
+    <path d="M30 2 C21 2 16 16 16 32 C16 48 24 58 27 66 L33 66 C36 58 44 48 44 32 C44 16 39 2 30 2 Z" fill="${c2}"/>
+    <path d="M30 2 C27 2 25 16 25 32 C25 48 28.5 59 30 66 C31.5 59 35 48 35 32 C35 16 33 2 30 2 Z" fill="${c1}"/>
+    <ellipse cx="15" cy="22" rx="4" ry="10" fill="#fff" opacity=".3" transform="rotate(18 15 22)"/>
+    <rect x="22" y="63" width="16" height="4" rx="1.5" fill="${c3}"/>
+    <path d="M24 67 L26 78 M36 67 L34 78 M30 67 L30 78" stroke="#2a2246" stroke-width="1.1"/>
+    <rect x="23" y="76" width="14" height="3" rx="1" fill="#6e452c"/><rect x="24" y="78" width="12" height="9" rx="2" fill="#8a5a3c"/></svg>`;
+}
+document.getElementById('ldBalloons').innerHTML = BALLOONS.map(([x, y, w, c1, c2, c3, op, d, dl]) =>
+  `<div class="ld-balloon" style="left:${x}%; top:${y}%; width:calc(var(--bs,1) * ${w}px); height:calc(var(--bs,1) * ${w * 1.5}px); opacity:${op}; --d:${d}s; --dl:${dl}s">${balloonSvg(c1, c2, c3)}</div>`).join('');
+function showLanding(html, asCard){
+  overlay.hidden = true; landing.hidden = false;
+  ldPanel.innerHTML = asCard ? `<div class="ld-card">${html}</div>` : html;
+}
+function bestOverall(){
+  let b = 0;
+  for (const id of WORLD_IDS){ try { b = Math.max(b, +localStorage.getItem('bubble-worlds-best-' + id) || 0); } catch(e){} }
+  return b;
+}
 function showMenu(){
   const inGame = inGameNow();
   menuResumable = inGame; pickerResumable = false; state = 'menu';
-  card.innerHTML = `<h2 class="menu-title">Bubble Worlds</h2>
-    <p>Pop, match and drop bubbles across five cozy worlds.</p>
-    <div class="menu-buttons">
-      ${inGame ? '<button class="btn big" id="mResume" type="button">Resume</button>' : ''}
-      <button class="btn big${inGame ? ' ghost' : ''}" id="mPlay" type="button">Play</button>
-      <button class="btn big ghost" id="mLoad" type="button">Load</button>
-      <button class="btn big ghost" id="mSettings" type="button">Settings</button>
-    </div>
-    <p class="tips">Aim and release to shoot. Tap NEXT to swap. Bombs blast nearby bubbles, rainbows match any color, and rocks fall only when cut loose.</p>`;
-  overlay.hidden = false;
+  const used = slots.filter(Boolean).length;
+  showLanding(`${inGame ? '<button class="ld-btn primary" id="mResume" type="button">Resume</button>' : ''}
+    <button class="ld-btn${inGame ? '' : ' primary'}" id="mPlay" type="button">Play</button>
+    <button class="ld-btn" id="mLoad" type="button">Load</button>
+    <button class="ld-btn" id="mSettings" type="button">Settings</button>
+    <p class="ld-foot">Best ${bestOverall().toLocaleString()} · ${used} of 3 save slots used</p>
+    <p class="ld-tip">Aim and release to shoot. Tap NEXT to swap. Bombs blast nearby bubbles, rainbows match any color.</p>`);
   bind('mResume', () => { menuResumable = false; play(false); });
   bind('mPlay', newGame);
   bind('mLoad', showLoad);
@@ -847,10 +927,10 @@ function newGame(){
   const idx = slots.findIndex(s => !s);
   if (idx >= 0) return startNewIn(idx);
   const { w, line } = slotSummary(slots[0]);
-  card.innerHTML = `<h2>All 3 save slots are full</h2>
+  showLanding(`<h3>All 3 save slots are full</h3>
     <p>Starting a new game will overwrite <b>Save 1</b>:<br>${esc(w.name)}, ${esc(line)}.</p>
     <p>This can't be undone.</p>
-    <div class="row"><button class="btn" id="owYes" type="button">Overwrite Save 1</button><button class="btn ghost" id="owNo" type="button">Cancel</button></div>`;
+    <div class="row"><button class="btn" id="owYes" type="button">Overwrite Save 1</button><button class="btn ghost" id="owNo" type="button">Cancel</button></div>`, true);
   bind('owYes', () => startNewIn(0));
   bind('owNo', showMenu);
   document.getElementById('owNo').focus({ preventScroll:true });
@@ -882,8 +962,8 @@ function showLoad(){
         <span class="slot-w" style="font-family:${esc(w.css.display)}">${esc(w.name)}</span><span class="slot-d">${esc(line)}</span></button>
       <button class="slot-del" id="del${i}" type="button" aria-label="Delete save ${i + 1}">Delete</button></div>`;
   }).join('');
-  card.innerHTML = `<h2>Load game</h2><p>Pick a save to continue where you left off.</p><div class="slots">${rows}</div>
-    <div class="row"><button class="btn ghost" id="loadBack" type="button">Back</button></div>`;
+  showLanding(`<h3>Load game</h3><p>Pick a save to continue where you left off.</p><div class="slots">${rows}</div>
+    <div class="row"><button class="btn ghost" id="loadBack" type="button">Back</button></div>`, true);
   slots.forEach((s, i) => {
     if (!s) return;
     bind('slot' + i, () => loadSlot(i));
@@ -900,13 +980,13 @@ function showLoad(){
 function showSettings(){
   state = 'menu';
   const canRestart = menuResumable && activeSlot >= 0;
-  card.innerHTML = `<h2>Settings</h2>
+  showLanding(`<h3>Settings</h3>
     <div class="set-rows">
       <div class="set-row"><span>Music<small>A gentle tune for each world</small></span><button class="btn small${musicOn ? '' : ' ghost'}" id="setMusic" type="button" aria-pressed="${musicOn}">${musicOn ? 'On' : 'Off'}</button></div>
       <div class="set-row"><span>Sound effects<small>Pops, booms and chimes</small></span><button class="btn small${muted ? ' ghost' : ''}" id="setSfx" type="button" aria-pressed="${!muted}">${muted ? 'Off' : 'On'}</button></div>
       <div class="set-row"><span>Restart game<small>${canRestart ? `Start Save ${activeSlot + 1} again from level 1` : 'Start or load a game first'}</small></span><button class="btn small ghost" id="setRestart" type="button"${canRestart ? '' : ' disabled'}>Restart</button></div>
     </div>
-    <div class="row"><button class="btn ghost" id="setBack" type="button">Back</button></div>`;
+    <div class="row"><button class="btn ghost" id="setBack" type="button">Back</button></div>`, true);
   bind('setMusic', () => { setMusic(!musicOn); showSettings(); document.getElementById('setMusic').focus({ preventScroll:true }); });
   bind('setSfx', () => { setSfx(muted); showSettings(); document.getElementById('setSfx').focus({ preventScroll:true }); });
   bind('setRestart', el => {
@@ -918,6 +998,7 @@ function showSettings(){
 }
 
 function showPicker(){
+  landing.hidden = true;
   const resumable = state === 'play' || (state === 'pick' && pickerResumable);
   const fromClear = state === 'clear' || (state === 'pick' && pickerFromClear);
   pickerResumable = resumable; pickerFromClear = fromClear;
