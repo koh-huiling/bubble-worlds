@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}[hidden]{display:none!important}</style>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#fde6ec">
+<style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}[hidden]{display:none!important}</style>
 <title>Bubble Worlds</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,7 +20,8 @@
   color-scheme:light;
 }
 html,body{height:100%}
-body{background:var(--page); color:var(--ink); font-family:var(--body); overflow:hidden; transition:background-color .3s}
+body{background:var(--page); color:var(--ink); font-family:var(--body); overflow:hidden; overscroll-behavior:none; transition:background-color .3s;
+  -webkit-tap-highlight-color:transparent; -webkit-user-select:none; user-select:none; touch-action:manipulation}
 .app{box-sizing:border-box; height:100%; max-width:560px; margin:0 auto; display:flex; flex-direction:column; gap:10px; padding-inline:16px; padding-block:12px}
 header{display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px 12px}
 h1{font-family:var(--display); font-weight:800; font-size:1.55rem; line-height:1.1; margin:0; color:var(--title); text-shadow:var(--title-shadow)}
@@ -64,8 +66,45 @@ canvas#game{display:block; border-radius:24px; touch-action:none; cursor:crossha
 .world .wname{font-family:var(--wfont); font-size:1rem; color:var(--wtitle); line-height:1.2}
 .world .wtwist{font-size:.72rem; font-weight:800; opacity:.85}
 .world .wbest{font-size:.66rem; font-weight:800; opacity:.7}
+.menu-title{font-family:var(--display); font-weight:800; font-size:2.1rem; line-height:1.1; margin:0; color:var(--title); text-shadow:var(--title-shadow); text-wrap:balance}
+.menu-buttons{display:flex; flex-direction:column; gap:10px; width:100%; max-width:240px}
+.btn.big{font-size:1.15rem; padding:12px 22px; width:100%}
+.btn.small{font-size:.85rem; padding:7px 14px; min-width:84px}
+.btn:disabled{opacity:.45; cursor:default; transform:none}
+.slots{display:flex; flex-direction:column; gap:8px; width:100%}
+.slot{display:flex; align-items:stretch; gap:6px; width:100%}
+.slot-main{flex:1; min-width:0; display:flex; flex-direction:column; align-items:flex-start; gap:2px; text-align:left; padding:9px 12px; border-radius:14px;
+  border:2.5px solid var(--edge); background:var(--page); color:var(--ink); font-family:var(--body); cursor:pointer}
+.slot-main:hover:not(:disabled){border-color:var(--accent)}
+.slot-main:disabled{cursor:default; border-style:dashed; background:transparent}
+.slot-n{font-size:.62rem; font-weight:900; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
+.slot-w{font-size:1.05rem; line-height:1.2}
+.slot-d{font-size:.76rem; font-weight:700; font-variant-numeric:tabular-nums}
+.slot-del{font:800 .74rem var(--body); border:2px solid var(--edge); background:transparent; color:var(--ink); border-radius:12px; padding:0 10px; cursor:pointer}
+.slot-del.armed{background:var(--accent); color:var(--accent-ink); border-color:var(--accent)}
+.set-rows{display:flex; flex-direction:column; width:100%}
+.set-row{display:flex; justify-content:space-between; align-items:center; gap:10px; padding:10px 2px; border-bottom:1.5px dashed var(--edge); text-align:left}
+.set-row span{font-weight:800}
+.set-row small{display:block; font-weight:700; font-size:.72rem; color:var(--muted)}
 .hint{margin:0; text-align:center; font-size:.74rem; font-weight:800; color:var(--muted)}
+.tips{font-size:.78rem !important; color:var(--muted); max-width:30ch}
 @keyframes pop{from{transform:scale(.8); opacity:0} to{transform:scale(1); opacity:1}}
+/* Phones: title and buttons share the top row, score chips fill the second row, the board takes the rest. */
+@media (max-width: 560px){
+  .app{gap:6px; padding-block:8px}
+  header{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:6px 8px}
+  h1{font-size:1.3rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+  .tools{flex-wrap:nowrap}
+  .tool{padding:7px 11px; font-size:.8rem}
+  .stats{grid-column:1 / -1; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:5px}
+  .chip{min-width:0; padding:2px 4px; border-radius:12px}
+  .chip b{font-size:.95rem}
+  .frame, canvas#game, .overlay{border-radius:18px}
+  .overlay{padding:10px}
+  .card{padding:16px 12px; gap:8px}
+  .hint{display:none}
+}
+@media (max-height: 560px){ .hint{display:none} }
 @media (prefers-reduced-motion: reduce){ .card{animation:none} .world:hover{transform:none} }
 </style>
 </head>
@@ -82,9 +121,7 @@ canvas#game{display:block; border-radius:24px; touch-action:none; cursor:crossha
     </div>
     <div class="tools">
       <button class="tool primary" id="worldsBtn" type="button">Change world</button>
-      <button class="tool" id="musicBtn" type="button">Music on</button>
-      <button class="tool" id="soundBtn" type="button">Effects on</button>
-      <button class="tool" id="restartBtn" type="button">Restart</button>
+      <button class="tool" id="menuBtn" type="button">Menu</button>
     </div>
   </header>
   <div class="stage" id="stage">
@@ -448,7 +485,6 @@ const overlay = document.getElementById('overlay');
 const card = document.getElementById('card');
 const $title = document.getElementById('title');
 const $score = document.getElementById('score'), $level = document.getElementById('level'), $best = document.getElementById('best');
-const soundBtn = document.getElementById('soundBtn');
 const bgCanvas = document.createElement('canvas'), bctx = bgCanvas.getContext('2d');
 
 let worldId = 'mochi', world = WORLDS.mochi;
@@ -548,7 +584,12 @@ function tone(freq, dur, type = 'sine', vol = .12, slide = 0, delay = 0){
   g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(.001, t + dur);
   o.connect(g).connect(ac.destination); o.start(t); o.stop(t + dur + .02);
 }
-soundBtn.addEventListener('click', () => { muted = !muted; soundBtn.textContent = muted ? 'Effects off' : 'Effects on'; if (!muted) audio(); });
+try { muted = localStorage.getItem('bubble-worlds-sfx') === 'off'; } catch(e){}
+function setSfx(on){
+  muted = !on;
+  try { localStorage.setItem('bubble-worlds-sfx', on ? 'on' : 'off'); } catch(e){}
+  if (on){ audio(); tone(700, .08, 'sine', .08, 1.4); }
+}
 
 // ---------- music: a small looping tune per world, scheduled ahead on the audio clock ----------
 const MUSIC = {
@@ -558,10 +599,8 @@ const MUSIC = {
   pond:  { root:69, bpm:96, wave:'sine', len:1.6, vol:.04, mel:[0,4,7,4,9,7,4,2,0,2,4,7,4,null,null,null], bass:[0,5,7,0] },
   sushi: { root:62, bpm:80, wave:'triangle', len:1.4, vol:.04, mel:[12,10,7,null,5,7,1,null,0,null,5,7,10,null,7,null], bass:[0,null,-5,null] }
 };
-const musicBtn = document.getElementById('musicBtn');
 let musicOn = true, musicGain = null, mStep = 0, mNext = 0;
 try { musicOn = localStorage.getItem('bubble-worlds-music') !== 'off'; } catch(e){}
-musicBtn.textContent = musicOn ? 'Music on' : 'Music off';
 const midi = n => 440 * Math.pow(2, (n - 69) / 12);
 function musicNote(freq, t, dur, type, vol){
   const o = ac.createOscillator(), g = ac.createGain();
@@ -582,29 +621,38 @@ function musicTick(){
   }
 }
 setInterval(musicTick, 120);
-musicBtn.addEventListener('click', () => {
+function setMusic(on){
   audio();
-  musicOn = !musicOn;
-  musicBtn.textContent = musicOn ? 'Music on' : 'Music off';
-  try { localStorage.setItem('bubble-worlds-music', musicOn ? 'on' : 'off'); } catch(e){}
-  if (musicGain && ac) musicGain.gain.setValueAtTime(musicOn ? 1 : 0, ac.currentTime);
+  musicOn = on;
+  try { localStorage.setItem('bubble-worlds-music', on ? 'on' : 'off'); } catch(e){}
+  if (musicGain && ac) musicGain.gain.setValueAtTime(on ? 1 : 0, ac.currentTime);
   mNext = 0;
-});
+}
 
 // ---------- state ----------
 let grid = [], parity = 0, score = 0, best = 0, level = 1, nColors = 4;
-let cur = null, next = null, misses = 0, allowed = 6, state = 'pick';
+let cur = null, next = null, misses = 0, allowed = 6, state = 'menu';
 let shot = null, ceilOff = 0, aimA = Math.PI/2, shake = 0, clock = 0;
-let frostIn = 6, order = [], pickerResumable = false, combo = 0;
+let frostIn = 6, order = [], pickerResumable = false, pickerFromClear = false, menuResumable = false, combo = 0;
 const $combo = document.getElementById('combo'), $comboBar = document.getElementById('comboBar'), $comboChip = document.getElementById('comboChip');
 
-// ---------- saved progress (this browser only) ----------
-const SAVE_KEY = 'bubble-worlds-save';
+// ---------- three save slots (this browser only) ----------
+const SLOTS_KEY = 'bubble-worlds-slots';
+let slots = [null, null, null], activeSlot = -1;
+try {
+  const s = JSON.parse(localStorage.getItem(SLOTS_KEY) || 'null');
+  if (Array.isArray(s) && s.length === 3) slots = s;
+  const old = JSON.parse(localStorage.getItem('bubble-worlds-save') || 'null');
+  if (old && !slots.some(Boolean)){ old.savedAt = Date.now(); slots[0] = old; localStorage.setItem(SLOTS_KEY, JSON.stringify(slots)); }
+  localStorage.removeItem('bubble-worlds-save');
+} catch(e){}
+function writeSlots(){ try { localStorage.setItem(SLOTS_KEY, JSON.stringify(slots)); } catch(e){} }
 function saveGame(extra){
-  try { localStorage.setItem(SAVE_KEY, JSON.stringify(Object.assign({ v:1, worldId, grid, parity, score, level, nColors, allowed, cur, next, misses, frostIn, order, combo }, extra || {}))); } catch(e){}
+  if (activeSlot < 0) return;
+  slots[activeSlot] = JSON.parse(JSON.stringify(Object.assign({ v:2, savedAt:Date.now(), worldId, grid, parity, score, level, nColors, allowed, cur, next, misses, frostIn, order, combo }, extra || {})));
+  writeSlots();
 }
-function clearSave(){ try { localStorage.removeItem(SAVE_KEY); } catch(e){} }
-function loadSave(){ try { return JSON.parse(localStorage.getItem(SAVE_KEY) || 'null'); } catch(e){ return null; } }
+function clearSave(){ if (activeSlot < 0) return; slots[activeSlot] = null; writeSlots(); }
 const pops = [], falls = [], parts = [], floats = [];
 const ambient = [];
 
@@ -700,9 +748,112 @@ function play(fromLevel){
   state = 'play'; hud(); saveGame();
   canvas.focus({ preventScroll:true });
 }
+// ---------- main menu, load and settings ----------
+const esc = s => String(s).replace(/[&<>"]/g, ch => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[ch]));
+function inGameNow(){ return state === 'play' || (state === 'pick' && pickerResumable) || (state === 'menu' && menuResumable); }
+function bind(id, fn){ const el = document.getElementById(id); if (el) el.addEventListener('click', () => { audio(); fn(el); }); return el; }
+function showMenu(){
+  const inGame = inGameNow();
+  menuResumable = inGame; pickerResumable = false; state = 'menu';
+  card.innerHTML = `<h2 class="menu-title">Bubble Worlds</h2>
+    <p>Pop, match and drop bubbles across five cozy worlds.</p>
+    <div class="menu-buttons">
+      ${inGame ? '<button class="btn big" id="mResume" type="button">Resume</button>' : ''}
+      <button class="btn big${inGame ? ' ghost' : ''}" id="mPlay" type="button">Play</button>
+      <button class="btn big ghost" id="mLoad" type="button">Load</button>
+      <button class="btn big ghost" id="mSettings" type="button">Settings</button>
+    </div>
+    <p class="tips">Aim and release to shoot. Tap NEXT to swap. Bombs blast nearby bubbles, rainbows match any color, and rocks fall only when cut loose.</p>`;
+  overlay.hidden = false;
+  bind('mResume', () => { menuResumable = false; play(false); });
+  bind('mPlay', newGame);
+  bind('mLoad', showLoad);
+  bind('mSettings', showSettings);
+  (document.getElementById('mResume') || document.getElementById('mPlay')).focus({ preventScroll:true });
+}
+function slotSummary(s){
+  const w = WORLDS[s.worldId] || WORLDS.mochi;
+  const when = s.savedAt ? new Date(s.savedAt).toLocaleString([], { month:'short', day:'numeric', hour:'numeric', minute:'2-digit' }) : '';
+  return { w, line: `Level ${s.level || 1} · ${(s.score || 0).toLocaleString()} pts${when ? ' · ' + when : ''}` };
+}
+function newGame(){
+  const idx = slots.findIndex(s => !s);
+  if (idx >= 0) return startNewIn(idx);
+  const { w, line } = slotSummary(slots[0]);
+  card.innerHTML = `<h2>All 3 save slots are full</h2>
+    <p>Starting a new game will overwrite <b>Save 1</b>:<br>${esc(w.name)}, ${esc(line)}.</p>
+    <p>This can't be undone.</p>
+    <div class="row"><button class="btn" id="owYes" type="button">Overwrite Save 1</button><button class="btn ghost" id="owNo" type="button">Cancel</button></div>`;
+  bind('owYes', () => startNewIn(0));
+  bind('owNo', showMenu);
+  document.getElementById('owNo').focus({ preventScroll:true });
+}
+function startNewIn(idx){
+  activeSlot = idx; menuResumable = false; shot = null;
+  pops.length = falls.length = parts.length = floats.length = 0;
+  play(true);
+  floats.push({ x:W/2, y:H/2 - 80, text:`New game · Save ${idx + 1}`, t:-.2 });
+}
+function loadSlot(i){
+  const s = JSON.parse(JSON.stringify(slots[i]));
+  activeSlot = i; menuResumable = false; shot = null;
+  setWorld(WORLDS[s.worldId] ? s.worldId : 'mochi');
+  if (s.fresh){ score = s.score || 0; setupLevel(s.level || 1); }
+  else ({ grid, parity, score, level, nColors, allowed, cur, next, misses, frostIn, order } = s);
+  combo = s.combo || 0;
+  play(false);
+  floats.push({ x:W/2, y:H/2 - 80, text:`Welcome back! Level ${level}`, t:-.2 });
+}
+function showLoad(){
+  state = 'menu';
+  const rows = slots.map((s, i) => {
+    if (!s) return `<div class="slot"><button class="slot-main" type="button" disabled><span class="slot-n">Save ${i + 1}</span><span class="slot-d">Empty</span></button></div>`;
+    const { w, line } = slotSummary(s);
+    const playing = i === activeSlot && menuResumable ? ' · playing now' : '';
+    return `<div class="slot">
+      <button class="slot-main" id="slot${i}" type="button"><span class="slot-n">Save ${i + 1}${playing}</span>
+        <span class="slot-w" style="font-family:${esc(w.css.display)}">${esc(w.name)}</span><span class="slot-d">${esc(line)}</span></button>
+      <button class="slot-del" id="del${i}" type="button" aria-label="Delete save ${i + 1}">Delete</button></div>`;
+  }).join('');
+  card.innerHTML = `<h2>Load game</h2><p>Pick a save to continue where you left off.</p><div class="slots">${rows}</div>
+    <div class="row"><button class="btn ghost" id="loadBack" type="button">Back</button></div>`;
+  slots.forEach((s, i) => {
+    if (!s) return;
+    bind('slot' + i, () => loadSlot(i));
+    bind('del' + i, el => {
+      if (!el.classList.contains('armed')){ el.classList.add('armed'); el.textContent = 'Sure?'; return; }
+      slots[i] = null; writeSlots();
+      if (i === activeSlot){ activeSlot = -1; menuResumable = false; }
+      showLoad();
+    });
+  });
+  bind('loadBack', showMenu);
+  (document.getElementById('slot0') || document.getElementById('slot1') || document.getElementById('slot2') || document.getElementById('loadBack')).focus({ preventScroll:true });
+}
+function showSettings(){
+  state = 'menu';
+  const canRestart = menuResumable && activeSlot >= 0;
+  card.innerHTML = `<h2>Settings</h2>
+    <div class="set-rows">
+      <div class="set-row"><span>Music<small>A gentle tune for each world</small></span><button class="btn small${musicOn ? '' : ' ghost'}" id="setMusic" type="button" aria-pressed="${musicOn}">${musicOn ? 'On' : 'Off'}</button></div>
+      <div class="set-row"><span>Sound effects<small>Pops, booms and chimes</small></span><button class="btn small${muted ? ' ghost' : ''}" id="setSfx" type="button" aria-pressed="${!muted}">${muted ? 'Off' : 'On'}</button></div>
+      <div class="set-row"><span>Restart game<small>${canRestart ? `Start Save ${activeSlot + 1} again from level 1` : 'Start or load a game first'}</small></span><button class="btn small ghost" id="setRestart" type="button"${canRestart ? '' : ' disabled'}>Restart</button></div>
+    </div>
+    <div class="row"><button class="btn ghost" id="setBack" type="button">Back</button></div>`;
+  bind('setMusic', () => { setMusic(!musicOn); showSettings(); document.getElementById('setMusic').focus({ preventScroll:true }); });
+  bind('setSfx', () => { setSfx(muted); showSettings(); document.getElementById('setSfx').focus({ preventScroll:true }); });
+  bind('setRestart', el => {
+    if (el.dataset.armed !== '1'){ el.dataset.armed = '1'; el.textContent = 'Sure?'; el.classList.remove('ghost'); return; }
+    startNewIn(activeSlot);
+  });
+  bind('setBack', showMenu);
+  document.getElementById('setMusic').focus({ preventScroll:true });
+}
+
 function showPicker(){
   const resumable = state === 'play' || (state === 'pick' && pickerResumable);
-  pickerResumable = resumable;
+  const fromClear = state === 'clear' || (state === 'pick' && pickerFromClear);
+  pickerResumable = resumable; pickerFromClear = fromClear;
   state = 'pick';
   card.innerHTML = '<h2>Pick a world</h2><p>' + (resumable ? 'Your score, level and board come with you.' : 'Each world has its own bubbles and a special twist.') +
     '</p><div class="worlds" id="worlds"></div>' + (resumable ? '<div class="row"><button class="btn ghost" id="keepBtn" type="button">Keep playing</button></div>' : '');
@@ -726,6 +877,9 @@ function showPicker(){
         pickerResumable = false;
         if (id !== worldId){ setWorld(id); reskin(); }
         play(false);
+      } else if (fromClear){
+        pickerFromClear = false;
+        setWorld(id); setupLevel(level + 1); play(false);
       } else { setWorld(id); play(true); }
     });
     box.appendChild(btn);
@@ -742,7 +896,7 @@ function gameOver(){
   grid = []; combo = 0; clearSave();
   tone(400, .5, 'triangle', .1, .4);
   setTimeout(() => showCard(`<h2>Oh no, the line was crossed!</h2><div class="big">${score}</div><p>You reached level ${level} in ${world.name}. Best: ${best}.</p>`,
-    [{ label:'Try again', go:() => play(true) }, { label:'Change world', ghost:true, go:showPicker }]), 900);
+    [{ label:'Try again', go:() => play(true) }, { label:'Main menu', ghost:true, go:showMenu }]), 900);
 }
 function levelClear(){
   state = 'clear';
@@ -992,8 +1146,13 @@ addEventListener('keydown', e => {
   if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') e.preventDefault();
 });
 addEventListener('keyup', e => { keys[e.key] = false; });
-document.getElementById('restartBtn').addEventListener('click', () => { audio(); clearSave(); shot = null; pops.length = falls.length = parts.length = floats.length = 0; play(true); });
-document.getElementById('worldsBtn').addEventListener('click', () => { audio(); if (state !== 'pick') showPicker(); });
+document.getElementById('menuBtn').addEventListener('click', () => { audio(); if (state !== 'menu') showMenu(); });
+document.getElementById('worldsBtn').addEventListener('click', () => {
+  audio();
+  if (state === 'play' || state === 'over' || state === 'clear') showPicker();
+  else if (state === 'menu' && !menuResumable) newGame();
+  else if (state === 'menu'){ menuResumable = false; state = 'play'; showPicker(); }
+});
 
 // ---------- update ----------
 for (let i = 0; i < 14; i++) ambient.push({ x:Math.random()*W, y:TOP + Math.random()*(H - TOP), s:3 + Math.random()*7, v:18 + Math.random()*26, ph:Math.random()*TAU, rot:Math.random()*TAU });
@@ -1209,26 +1368,22 @@ function frame(t){
   update(dt); draw();
   requestAnimationFrame(frame);
 }
-function snapshot(){ return { worldId, grid, parity, score, level, nColors, allowed, cur, next, misses, state, frostIn, order, combo }; }
+function snapshot(){ return { worldId, grid, parity, score, level, nColors, allowed, cur, next, misses, state, frostIn, order, combo, activeSlot }; }
 try { window.claude?.hot?.snapshot?.(snapshot); } catch(e){}
 
 function start(data){
-  // Resume order: the viewer's live snapshot, then this browser's saved game, else a fresh Mochi Bakery game.
-  let src = null, fresh = false;
-  if (data && data.state === 'play' && Array.isArray(data.grid) && data.grid.length) src = data;
-  else {
-    const sv = loadSave();
-    if (sv && WORLDS[sv.worldId] && (sv.fresh || (Array.isArray(sv.grid) && sv.grid.length))){ src = sv; fresh = !!sv.fresh; }
-  }
-  if (src && WORLDS[src.worldId]){ worldId = src.worldId; world = WORLDS[worldId]; }
+  // A live viewer update keeps the game going; otherwise open on the main menu with Mochi Bakery behind it.
+  const live = data && data.state === 'play' && Array.isArray(data.grid) && data.grid.length;
+  if (live && WORLDS[data.worldId]){ worldId = data.worldId; world = WORLDS[worldId]; }
   applyWorldCss(); loadBest(); fit();
-  if (src){
-    if (fresh){ score = src.score || 0; setupLevel(src.level || 1); }
-    else ({ grid, parity, score, level, nColors, allowed, cur, next, misses, frostIn, order } = src);
-    combo = src.combo || 0;
-    if (src !== data) floats.push({ x:W/2, y:H/2 - 80, text:`Welcome back! Level ${level}`, t:-.3 });
-  } else setupLevel(1);
-  state = 'play'; overlay.hidden = true; hud(); saveGame();
+  if (live){
+    ({ grid, parity, score, level, nColors, allowed, cur, next, misses, frostIn, order } = data);
+    combo = data.combo || 0;
+    activeSlot = typeof data.activeSlot === 'number' ? data.activeSlot : -1;
+    state = 'play'; overlay.hidden = true; hud();
+  } else {
+    setupLevel(1); hud(); state = 'menu'; showMenu();
+  }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (state === 'pick') showPicker(); });
   requestAnimationFrame(frame);
 }
