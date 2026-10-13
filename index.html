@@ -93,8 +93,9 @@ canvas#game{display:block; border-radius:24px; touch-action:none; cursor:crossha
 @media (max-width: 560px){
   .app{gap:6px; padding-block:8px}
   header{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:6px 8px}
-  h1{font-size:1.3rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
-  .tools{flex-wrap:nowrap}
+  h1{grid-column:1; grid-row:1; font-size:1.3rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+  .tools{grid-column:2; grid-row:1; flex-wrap:nowrap}
+  .stats{grid-row:2}
   .tool{padding:7px 11px; font-size:.8rem}
   .stats{grid-column:1 / -1; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:5px}
   .chip{min-width:0; padding:2px 4px; border-radius:12px}
@@ -105,6 +106,19 @@ canvas#game{display:block; border-radius:24px; touch-action:none; cursor:crossha
   .hint{display:none}
 }
 @media (max-height: 560px){ .hint{display:none} }
+/* Phones held sideways: header becomes a narrow side column so the board gets the full height. */
+@media (orientation: landscape) and (max-height: 520px){
+  .app{max-width:none; flex-direction:row; align-items:stretch; gap:12px; padding-block:8px}
+  header{display:flex; flex-direction:column; align-items:stretch; justify-content:flex-start; gap:8px; width:clamp(150px, 26vw, 230px); flex:none}
+  h1{font-size:1.2rem; white-space:normal}
+  .stats{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:5px}
+  .tools{flex-direction:column; flex-wrap:nowrap}
+  .tool{text-align:center}
+  .stage{min-width:0}
+  .card h2, .menu-title{font-size:1.25rem}
+  .card{gap:6px; padding:12px 10px}
+  .btn.big{font-size:1rem; padding:9px 18px}
+}
 @media (prefers-reduced-motion: reduce){ .card{animation:none} .world:hover{transform:none} }
 </style>
 </head>
@@ -136,11 +150,18 @@ canvas#game{display:block; border-radius:24px; touch-action:none; cursor:crossha
 <script>
 (() => {
 const TAU = Math.PI * 2;
-const R = 20, COLS = 10, W = COLS*2*R + R, H = 640, ROWH = R*Math.sqrt(3), TOP = 16;
-const SX = W/2, SY = H - 84, DEADLINE = SY - R - 22, SPEED = 950;
+// The board is always 420 wide; its height grows on tall phones (640 to 900) so it fills the screen.
+const R = 20, COLS = 10, W = COLS*2*R + R, BASE_H = 640, MAX_H = 900, ROWH = R*Math.sqrt(3), TOP = 16;
+let H = BASE_H, SY = H - 84, DEADLINE = SY - R - 22;
+const SX = W/2, SPEED = 950;
 const PAD = 6, SS = 2*R + PAD*2;
 const NBOX = { x:10, y:SY - 12, w:66, h:84 }, TBOX = { x:W - 116, y:SY - 12, w:106, h:84 };
-const NX = NBOX.x + NBOX.w/2, NY = SY + 34;
+const NX = NBOX.x + NBOX.w/2;
+let NY = SY + 34;
+function setBoardHeight(h){
+  H = h; SY = H - 84; DEADLINE = SY - R - 22;
+  NBOX.y = SY - 12; TBOX.y = SY - 12; NY = SY + 34;
+}
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const rnd = n => Math.floor(Math.random() * n);
 
@@ -549,17 +570,44 @@ function buildBg(){
   bctx.setTransform(canvas.width / W, 0, 0, canvas.height / H, 0, 0);
   world.bg(bctx);
 }
-function fit(){
-  const box = stage.getBoundingClientRect();
-  const s = Math.max(.3, Math.min(box.width / W, box.height / H));
-  const dpr = Math.min(2, window.devicePixelRatio || 1);
+// Size the board from the real screen, not from the stage's own box: some phone browsers report the
+// stage before the page height is known, which used to leave the board stuck small in the middle.
+const appEl = document.querySelector('.app'), hintEl = document.querySelector('.hint');
+let lastFit = '';
+function fit(force){
+  const sb = stage.getBoundingClientRect();
+  const vv = window.visualViewport;
+  const vh = vv ? vv.height : window.innerHeight;
+  const vw = Math.min(document.documentElement.clientWidth || window.innerWidth, vv ? vv.width : Infinity);
+  const cs = getComputedStyle(appEl), rs = getComputedStyle(document.documentElement);
+  const hintH = hintEl && hintEl.offsetParent !== null ? hintEl.getBoundingClientRect().height + (parseFloat(cs.rowGap) || 0) : 0;
+  const below = hintH + (parseFloat(cs.paddingBottom) || 0) + (parseFloat(rs.paddingBottom) || 0);
+  const availH = Math.max(160, vh - Math.max(0, sb.top) - below);
+  const availW = Math.max(160, Math.min(sb.width || vw, vw - (parseFloat(cs.paddingLeft) || 0) - (parseFloat(cs.paddingRight) || 0)));
+  // Fill the width first; if that leaves spare height, make the board taller instead of leaving empty bands.
+  let target = Math.min(MAX_H, Math.max(BASE_H, Math.round(availH / (availW / W))));
+  // Ignore small changes (a browser bar sliding in or out) so the board doesn't jump mid-game.
+  if (!force && Math.abs(target - H) < 60) target = H;
+  if (target !== H) setBoardHeight(target);
+  const s = Math.max(.25, Math.min(availW / W, availH / H));
+  const dpr = Math.min(2.5, window.devicePixelRatio || 1);
+  const key = s.toFixed(4) + '|' + dpr + '|' + H;
+  if (!force && key === lastFit) return;
+  lastFit = key;
   canvas.style.width = (W*s) + 'px'; canvas.style.height = (H*s) + 'px';
   canvas.width = Math.round(W*s*dpr); canvas.height = Math.round(H*s*dpr);
   ctx.setTransform(canvas.width / W, 0, 0, canvas.height / H, 0, 0);
   devScale = s * dpr;
   buildSprites(); buildBg();
 }
-new ResizeObserver(fit).observe(stage);
+let fitQueued = false;
+function queueFit(){ if (fitQueued) return; fitQueued = true; requestAnimationFrame(() => { fitQueued = false; fit(); }); }
+new ResizeObserver(queueFit).observe(document.body);
+addEventListener('resize', queueFit);
+addEventListener('orientationchange', () => setTimeout(queueFit, 250));
+if (window.visualViewport) visualViewport.addEventListener('resize', queueFit);
+addEventListener('pageshow', queueFit);
+[300, 1000, 2500].forEach(ms => setTimeout(queueFit, ms));
 
 function applyWorldCss(){
   const c = world.css, st = document.documentElement.style;
@@ -1384,7 +1432,7 @@ function start(data){
   } else {
     setupLevel(1); hud(); state = 'menu'; showMenu();
   }
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (state === 'pick') showPicker(); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { queueFit(); if (state === 'pick') showPicker(); });
   requestAnimationFrame(frame);
 }
 window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? {});
