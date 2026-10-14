@@ -258,6 +258,76 @@ html.tight-ui .ld-tip{display:none}
 .ld-tag{flex:none; line-height:1.2}
 html.tight-ui .ld-btn, html.tight-ui .ld-btn.primary, html.tight-ui .ld-btn.play, html.tight-ui .ld-btn.resume{height:48px}
 html.tight-ui .ld-btn.primary, html.tight-ui .ld-btn.play, html.tight-ui .ld-btn.resume{font-size:20px}
+/* Main menu: progress card and roomier buttons. */
+.ld-btn{position:relative}
+.ld-btns{display:flex; flex-direction:column; gap:16px}
+.ld-panel{gap:14px}
+.ld-btn.play{height:60px}
+.ld-btn-2{display:flex; flex-direction:column; align-items:center; line-height:1.05}
+.ld-btn-2 small{font:900 12px var(--body); opacity:.8; margin-top:2px}
+.ld-coinbadge{position:absolute; right:10px; top:-10px; width:26px; height:26px; border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, #fff1a8, #ffc93c 55%, #e09d1a); box-shadow:0 0 0 3px #ffffff, 0 3px 8px rgba(36,50,74,.3); animation:glint 1.6s ease-in-out infinite}
+.ld-coinbadge::after{content:""; position:absolute; inset:6px; border-radius:50%; box-shadow:inset 0 0 0 2px #e8a91e}
+.ld-prog{padding:11px 14px; border-radius:18px; background:rgba(255,255,255,.88); display:flex; flex-direction:column; gap:8px}
+.ld-prog-top{display:flex; justify-content:space-between; align-items:baseline; gap:8px; font-size:12px; font-weight:900; color:#5d6b80}
+.ld-prog-top span:first-child{font-size:17px}
+.ld-bar{display:grid; grid-template-columns:repeat(10, minmax(0, 1fr)); gap:4px}
+.ld-bar span{height:9px; border-radius:5px}
+html.tight-ui .ld-btns{gap:12px}
+html.tight-ui .ld-btn.play{height:54px}
+html.tight-ui .ld-prog{padding:8px 12px; gap:6px}
+/* Level map. */
+.landing.page .ld-panel:has(.lv){overflow:hidden}
+.lv{display:flex; flex-direction:column; gap:6px; height:100%; min-height:0}
+.lv-badges{flex:none; display:flex; gap:4px; overflow-x:auto; scroll-snap-type:x mandatory; padding:12px 16px 6px; scrollbar-width:none;
+  -webkit-mask-image:linear-gradient(90deg, transparent 0, #000 16px, #000 calc(100% - 28px), transparent); mask-image:linear-gradient(90deg, transparent 0, #000 16px, #000 calc(100% - 28px), transparent)}
+.lv-badges::-webkit-scrollbar{display:none}
+.lv-badge{flex:none; width:68px; scroll-snap-align:start; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; gap:5px; padding:0; border:0; background:none;
+  font:900 11px var(--body); color:#24324a; cursor:pointer}
+.lv-dot{position:relative; display:block; width:50px; height:50px; border-radius:50%; box-shadow:0 4px 0 rgba(36,50,74,.15)}
+.lv-badge.on .lv-dot{width:58px; height:58px; box-shadow:0 0 0 3px #ffffff, 0 0 0 6px #24324a}
+.lv-dot i{position:absolute; width:32%; height:32%; border-radius:50%}
+.lv-lockic{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#8592a5}
+.lv-badge:focus-visible, .lv-node:focus-visible, .lv-play:focus-visible{outline:3px solid #24324a; outline-offset:3px; border-radius:16px}
+.lv-sum{flex:none; margin:0; text-align:center; font-size:13px; font-weight:900; color:#24324a}
+.lv-sum span{font-size:15px}
+.lv-map{position:relative; flex:1; min-height:0; overflow-y:auto; overscroll-behavior:contain; scrollbar-width:none; -webkit-mask-image:linear-gradient(180deg, transparent 0, #000 20px, #000 calc(100% - 20px), transparent); mask-image:linear-gradient(180deg, transparent 0, #000 20px, #000 calc(100% - 20px), transparent)}
+.lv-map::-webkit-scrollbar{display:none}
+.lv-inner{position:relative; width:300px; margin:0 auto}
+.lv-path{position:absolute; left:0; top:0}
+.lv-node{position:absolute; width:60px; height:60px; padding:0; border:0; background:none; cursor:pointer}
+.lv-node:disabled{cursor:default}
+.lv-cur{position:absolute; inset:0; border-radius:50%; background:#ff8a5c; box-shadow:0 5px 0 #d0582c; display:flex; align-items:center; justify-content:center; font:400 26px "Righteous","Nunito",sans-serif; color:#24324a}
+.lv-pulse{position:absolute; inset:-8px; border-radius:50%; border:4px solid #ff8a5c; animation:lvpulse 1.8s ease-out infinite}
+.lv-tag{position:absolute; left:50%; top:-28px; transform:translateX(-50%); white-space:nowrap; background:#24324a; color:#ffffff; font:900 11px var(--body); border-radius:999px; padding:3px 9px}
+.lv-lock{position:absolute; inset:8px; border-radius:50%; background:rgba(255,255,255,.7); box-shadow:0 4px 0 rgba(36,50,74,.15); display:flex; align-items:center; justify-content:center; color:#8592a5}
+.lv-bal{position:absolute; left:-2px; top:-30px; width:64px; height:96px; animation:lvbob 1.8s ease-in-out infinite}
+.lv-bal svg{display:block; width:100%; height:100%}
+.lv-num{position:absolute; left:0; right:0; top:18px; text-align:center; font:400 22px "Righteous","Nunito",sans-serif; color:#24324a; text-shadow:0 0 6px rgba(255,255,255,.95)}
+.lv-tick{position:absolute; right:-2px; top:0; width:20px; height:20px; border-radius:50%; background:#2f7a52; box-shadow:0 0 0 2px #ffffff; display:flex; align-items:center; justify-content:center}
+.lv-stars{position:absolute; left:50%; top:68px; transform:translateX(-50%); display:flex; gap:1px}
+.lv-next{flex:none; display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:22px; background:#ffffff; box-shadow:0 -6px 30px -12px rgba(36,50,74,.45)}
+.lv-next .t{flex:1; min-width:0; display:flex; flex-direction:column}
+.lv-next small{font-size:11px; font-weight:900; letter-spacing:.08em; color:#5d6b80; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.lv-next b{font:400 22px "Righteous","Nunito",sans-serif}
+.lv-play{height:50px; padding:0 26px; border:0; border-radius:999px; background:#ff8a5c; color:#24324a; font:400 21px "Righteous","Nunito",sans-serif; box-shadow:0 5px 0 #d0582c; cursor:pointer;
+  transition:transform .38s cubic-bezier(.3,1.9,.5,1), box-shadow .38s cubic-bezier(.3,1.9,.5,1)}
+.lv-play:active{transform:translateY(4px); box-shadow:0 1px 0 #d0582c; transition-duration:.05s}
+.lv-big-stars{display:flex; align-items:flex-end; justify-content:center; gap:6px}
+.lv-big-stars > span:first-child{transform:rotate(-10deg)} .lv-big-stars > span:last-child{transform:rotate(10deg)}
+.lv-stats{display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:8px; width:100%}
+.lv-stats div{padding:9px 6px; border-radius:14px; background:#f3f7fb; text-align:center; color:#24324a}
+.lv-stats div.gold{background:#fff6d6}
+.lv-stats small{display:block; font-size:10px; font-weight:900; letter-spacing:.08em; color:#5d6b80}
+.lv-stats b{font-size:17px; font-variant-numeric:tabular-nums}
+.rp{padding-top:20px}
+.rp-world{font-size:11px; font-weight:900; letter-spacing:.1em}
+.star-pop{display:inline-block; animation:starpop .45s cubic-bezier(.3,1.8,.5,1) both}
+@keyframes starpop{from{transform:scale(0) rotate(-30deg)} to{transform:scale(1) rotate(0)}}
+@keyframes lvbob{0%,100%{transform:translateY(0) rotate(-2deg)} 50%{transform:translateY(-10px) rotate(2deg)}}
+@keyframes lvpulse{0%,100%{transform:scale(1); opacity:.7} 50%{transform:scale(1.25); opacity:0}}
+@keyframes glint{0%,100%{transform:scale(1)} 50%{transform:scale(1.12)}}
+@media (prefers-reduced-motion: reduce){ .lv-bal, .lv-pulse, .ld-coinbadge, .star-pop{animation:none} }
 </style>
 </head>
 <body>
@@ -290,7 +360,7 @@ html.tight-ui .ld-btn.primary, html.tight-ui .ld-btn.play, html.tight-ui .ld-btn
       <div class="chip combo" id="comboChip"><span>Combo</span><b id="combo">×1</b><i class="meter"><i id="comboBar"></i></i></div>
     </div>
     <div class="tools">
-      <button class="tool primary" id="worldsBtn" type="button">Change world</button>
+      <button class="tool primary" id="worldsBtn" type="button">Levels</button>
       <button class="tool" id="menuBtn" type="button">Menu</button>
     </div>
   </header>
@@ -308,18 +378,21 @@ html.tight-ui .ld-btn.primary, html.tight-ui .ld-btn.play, html.tight-ui .ld-btn
 const TAU = Math.PI * 2;
 // The board is always 420 wide; its height grows on tall phones (640 to 900) so it fills the screen.
 const R = 20, COLS = 10, W = COLS*2*R + R, BASE_H = 640, MAX_H = 900, ROWH = R*Math.sqrt(3), TOP = 16;
-let H = BASE_H, SY = H - 84, DEADLINE = SY - R - 22;
+let H = BASE_H, SY = H - 84, DEADLINE = Math.min(SY - R - 22, TOP + 2*R + 13*ROWH + 8);
 const SX = W/2, SPEED = 1140; // shot speed in px per second (raised 20% from 950)
 const PAD = 6, SS = 2*R + PAD*2;
 const NBOX = { x:10, y:SY - 12, w:66, h:84 }, TBOX = { x:W - 116, y:SY - 12, w:106, h:84 };
 const NX = NBOX.x + NBOX.w/2;
 let NY = SY + 34;
 function setBoardHeight(h){
-  H = h; SY = H - 84; DEADLINE = SY - R - 22;
+  H = h; SY = H - 84; DEADLINE = Math.min(SY - R - 22, TOP + 2*R + 13*ROWH + 8);
   NBOX.y = SY - 12; TBOX.y = SY - 12; NY = SY + 34;
 }
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
-const rnd = n => Math.floor(Math.random() * n);
+let RNG = Math.random;
+const rnd = n => Math.floor(RNG() * n);
+function seeded(seed){ let a = seed >>> 0; return () => { a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function hashStr(str){ let h = 2166136261; for (const ch of str){ h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; }
 
 // ---------- drawing helpers ----------
 function circ(g, x, y, r, f){ g.fillStyle = f; g.beginPath(); g.arc(x, y, r, 0, TAU); g.fill(); }
@@ -872,7 +945,7 @@ function setMusic(on){
 
 // ---------- state ----------
 let grid = [], parity = 0, score = 0, best = 0, level = 1, nColors = 4;
-let cur = null, next = null, misses = 0, allowed = 6, state = 'menu';
+let cur = null, next = null, misses = 0, allowed = 6, state = 'menu', rowIn = 8, levelShots = 0, D = null, twistShots = 0;
 let shot = null, ceilOff = 0, aimA = Math.PI/2, shake = 0, clock = 0, recoilT = -9, flashT = -9;
 const rings = [], coinFly = [];
 let frostIn = 6, order = [], pickerResumable = false, pickerFromClear = false, menuResumable = false, combo = 0;
@@ -890,11 +963,9 @@ try {
 } catch(e){}
 function writeSlots(){ try { localStorage.setItem(SLOTS_KEY, JSON.stringify(slots)); } catch(e){} }
 function saveGame(extra){
-  if (activeSlot < 0) return;
-  slots[activeSlot] = JSON.parse(JSON.stringify(Object.assign({ v:2, savedAt:Date.now(), worldId, grid, parity, score, level, nColors, allowed, cur, next, misses, frostIn, order, combo }, extra || {})));
-  writeSlots();
+  try { localStorage.setItem('bubble-worlds-current', JSON.stringify(Object.assign({ v:3, worldId, grid, parity, score, level, nColors, cur, next, rowIn, levelShots, frostIn, order, combo, twistShots, pendingRow }, extra || {}))); } catch(e){}
 }
-function clearSave(){ if (activeSlot < 0) return; slots[activeSlot] = null; writeSlots(); }
+function clearSave(){ try { localStorage.removeItem('bubble-worlds-current'); } catch(e){} }
 const pops = [], falls = [], parts = [], floats = [];
 const ambient = [];
 
@@ -902,23 +973,230 @@ const shifted = r => ((r + parity) & 1) === 1;
 const cellX = (r, c) => R + c*2*R + (shifted(r) ? R : 0);
 const cellY = r => TOP + R + r*ROWH + ceilOff;
 const get = (r, c) => (grid[r] && grid[r][c]) || null;
+// ---------- difficulty curve ----------
+// Levels 1-6 ramp colors, rows and row speed; 7-10 mix colors more; the world twist arrives at 11;
+// 16+ adds rocks and trims helpers; 21+ tightens stars. Every 5th level from 15 is a breather; it stops climbing at 30.
+function difficulty(L){
+  const breather = L >= 15 && L % 5 === 0;
+  const e = Math.max(1, Math.min(L, 30) - (breather ? 2 : 0));
+  return {
+    colors: Math.min(3 + e, 6),
+    rows: Math.min(4 + e, 9),
+    dropEvery: Math.max(5, 9 - Math.ceil(e / 3)),
+    cluster: e < 7 ? .35 : Math.max(.12, .35 - (e - 6) * .012),
+    stones: e < 2 ? 0 : Math.min(.12, .05 + Math.max(0, e - 15) * .005),
+    special: e < 16 ? .12 : Math.max(.05, .12 - (e - 15) * .005),
+    twistEvery: e < 11 ? 0 : e <= 15 ? 3 : 2,
+    twistCount: e <= 20 ? 1 : 2,
+    tight: e <= 20 ? 1 : 1 - Math.min(.15, (e - 20) * .015)
+  };
+}
+// Every level starts with rows x 10 bubbles, so star targets come straight from the difficulty.
+function starTargets(L){
+  const d = difficulty(L), n = d.rows * COLS;
+  return { three: Math.max(6, Math.round(n / 3.2 * d.tight)), two: Math.max(9, Math.round(n / 2.2 * d.tight)) };
+}
+
+// ---------- per-world progress (this browser only) ----------
+const PROG_KEY = 'bubble-worlds-progress', CUR_KEY = 'bubble-worlds-current';
+let progress = {}, lastWorld = 'mochi', mapWorld = 'mochi';
+try { progress = JSON.parse(localStorage.getItem(PROG_KEY) || '{}') || {}; } catch(e){ progress = {}; }
+try { lastWorld = localStorage.getItem('bubble-worlds-last') || 'mochi'; } catch(e){}
+function prog(id){
+  const p = progress[id] || (progress[id] = {});
+  p.next = p.next || 1; p.stars = p.stars || {}; p.best = p.best || {}; p.shots = p.shots || {};
+  return p;
+}
+function saveProgress(){ try { localStorage.setItem(PROG_KEY, JSON.stringify(progress)); } catch(e){} }
+function setLastWorld(id){ lastWorld = id; try { localStorage.setItem('bubble-worlds-last', id); } catch(e){} }
+// Players with old save slots keep the level they had reached in each world.
+(function migrateSlots(){
+  try {
+    if (localStorage.getItem('bubble-worlds-migrated')) return;
+    slots.forEach(s => { if (s && WORLDS[s.worldId]){ const p = prog(s.worldId); p.next = Math.max(p.next, s.level || 1); } });
+    saveProgress(); localStorage.setItem('bubble-worlds-migrated', '1');
+  } catch(e){}
+})();
+function loadCurrent(){ try { return JSON.parse(localStorage.getItem(CUR_KEY) || 'null'); } catch(e){ return null; } }
+
+// ---------- late world twists (from level 11): warned one shot ahead, never more than 1-2 bubbles ----------
+const TWIST_KIND = { sea:'shy', mochi:'toast', paper:'refold', pond:'hop', sushi:'conveyor' };
+const TWIST_TEXT = { shy:'Shy octopus!', toast:'Toasted!', refold:'Refolded!', hop:'Hop!', conveyor:'Conveyor!' };
+let pendingRow = false;
+function lateTwist(lr, lc){
+  if (!D || !D.twistEvery || state !== 'play') return;
+  const k = TWIST_KIND[worldId];
+  let did = 0;
+  if (k === 'conveyor'){
+    if (pendingRow && grid[0]){ grid[0].unshift(grid[0].pop()); did = 1; }
+    pendingRow = false;
+  } else {
+    grid.forEach((row, r) => row.forEach((v, c) => {
+      if (!v || !v.warn) return;
+      delete v.warn; did++;
+      const x = cellX(r, c), y = cellY(r);
+      if (k === 'toast'){ row[c] = { c:-1, k:'stone', rot:0, bloom:false }; burst(x, y, 8, false, '#8a5a3c'); }
+      else if (k === 'hop'){
+        const ns = neighbors(r, c).filter(([a, b]) => { const u = get(a, b); return u && u.k !== 'stone' && u.c !== v.c; });
+        if (ns.length){ const [a, b] = ns[rnd(ns.length)], u = grid[a][b]; grid[a][b] = v; row[c] = u; v.jg = { t:clock, x:0, y:-1 }; u.jg = { t:clock, x:0, y:-1 }; }
+      } else {
+        const cs = boardColors().filter(col => col !== v.c);
+        if (cs.length){ v.c = cs[rnd(cs.length)]; v.sq = clock; if (k === 'refold') v.rot = (Math.random() - .5) * .5; }
+      }
+      rings.push({ x, y, t:0, small:true });
+    }));
+  }
+  if (did){ tone(760, .14, 'sine', .06, .7); floats.push({ x:W/2, y:DEADLINE - 60, text:TWIST_TEXT[k], t:0 }); }
+  twistShots++;
+  if (twistShots % D.twistEvery) return;
+  if (k === 'conveyor'){ if (grid[0] && grid[0].some(Boolean)) pendingRow = true; return; }
+  const cand = [];
+  grid.forEach((row, r) => row.forEach((v, c) => { if (v && v.k !== 'stone' && v.c >= 0 && !v.kind && !(r === lr && c === lc)) cand.push(v); }));
+  for (let i = 0; i < D.twistCount && cand.length; i++){ const j = rnd(cand.length); cand[j].warn = true; cand.splice(j, 1); }
+}
+
+// ---------- starting, resuming and finishing levels ----------
+function startLevel(id, L){
+  if (id !== worldId) setWorld(id);
+  setLastWorld(id);
+  if (newWorlds.delete(id)) saveWallet();
+  shot = null; pops.length = falls.length = parts.length = floats.length = 0;
+  play(L);
+  floats.push({ x:W/2, y:H/2 - 80, text:`Level ${L}`, t:-.2 });
+}
+function resumeCurrent(s){
+  setWorld(WORLDS[s.worldId] ? s.worldId : 'mochi'); setLastWorld(worldId);
+  ({ grid, parity, score, level, nColors, cur, next, frostIn, order } = s);
+  D = difficulty(level);
+  rowIn = s.rowIn || D.dropEvery; levelShots = s.levelShots || 0; twistShots = s.twistShots || 0;
+  pendingRow = !!s.pendingRow; combo = s.combo || 0; gameCoins = 0; shot = null;
+  loadBest(); play(false);
+  floats.push({ x:W/2, y:H/2 - 80, text:`Welcome back! Level ${level}`, t:-.2 });
+}
+const starSvg = (on, size, cls) => `<svg class="${cls || ''}" width="${size}" height="${size}" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.8-4.9 4.5 1.3 6.5L12 17.1 6.1 20.3l1.3-6.5L2.5 9.3l6.6-.8z" fill="${on ? '#ffc93c' : '#e6e9ee'}" stroke="#c98a12" stroke-width="1.2" stroke-linejoin="round"/></svg>`;
+function levelClear(){
+  state = 'clear';
+  const L = level, p = prog(worldId), t = starTargets(L);
+  const stars = levelShots <= t.three ? 3 : levelShots <= t.two ? 2 : 1;
+  const firstClear = p.next <= L;
+  p.stars[L] = Math.max(p.stars[L] || 0, stars);
+  if (score > (p.best[L] || 0)) p.best[L] = score;
+  p.shots[L] = Math.min(p.shots[L] || 9999, levelShots);
+  if (firstClear) p.next = L + 1;
+  saveProgress(); clearSave(); earnCoins(25); best = p.best[L]; hud();
+  [523, 659, 784, 1046].forEach((f, i) => tone(f, .18, 'triangle', .1, 0, i*.09));
+  burst(W/2, H/2, 30, true);
+  const hint = stars < 3 ? `Clear it in ${t.three} shots or fewer for 3 stars.` : 'Perfect! 3 stars.';
+  setTimeout(() => showCard(`<h2>Level ${L} complete!</h2>
+    <div class="lv-big-stars">${[1, 2, 3].map(i => `<span class="star-pop" style="animation-delay:${.15 + i*.15}s">${starSvg(i <= stars, i === 2 ? 62 : 50)}</span>`).join('')}</div>
+    <div class="lv-stats"><div><small>SCORE</small><b>${score.toLocaleString()}</b></div><div><small>SHOTS</small><b>${levelShots}</b></div><div class="gold"><small>COINS</small><b>+${gameCoins.toLocaleString()}</b></div></div>
+    <p>${firstClear ? `Level ${L + 1} unlocked. ` : ''}${hint}</p>`,
+    [{ label:'Next level', go:() => startLevel(worldId, L + 1) }, { label:'Replay', ghost:true, go:() => startLevel(worldId, L) }, { label:'Levels', ghost:true, go:() => showLevels(worldId) }]), 700);
+}
+function gameOver(){
+  state = 'over';
+  grid.forEach((row, r) => row.forEach((v, c) => {
+    if (v) falls.push({ x:cellX(r, c), y:cellY(r), vx:(Math.random() - .5)*160, vy:-Math.random()*200 - r*20, cell:v });
+  }));
+  grid = []; combo = 0; clearSave();
+  tone(400, .5, 'triangle', .1, .4);
+  setTimeout(() => showCard(`<h2>Oh no, the line was crossed!</h2><div class="big">${score.toLocaleString()}</div><p>Level ${level} in ${world.name}. You earned <b>${gameCoins.toLocaleString()} coins</b>.</p>`,
+    [{ label:'Try again', go:() => startLevel(worldId, level) }, { label:'Levels', ghost:true, go:() => showLevels(worldId) }]), 900);
+}
+
+// ---------- level map ----------
+const BAL_COLORS = [['#7cc8ff', '#e0f2ff', '#3d95d6'], ['#f5a3bd', '#ffe8ef', '#d97895'], ['#8fd16a', '#e6f7dc', '#5a9c3a'], ['#ff8a5c', '#fff0e6', '#d0582c'], ['#ffd34d', '#fff6cc', '#d9a514']];
+const SHORT = { mochi:'Mochi', pond:'Pond', sea:'Sea', paper:'Paper', sushi:'Sushi' };
+const TICK_W = '<svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5 9-10" fill="none" stroke="#ffffff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+function levelNodeXY(L){ const xs = [150, 245, 150, 55]; return { x: xs[(L - 1) % 4], y: 46 + (L - 1) * 92 }; }
+function showLevels(id, replayL){
+  state = 'levels';
+  mapWorld = WORLDS[id] && unlocked.has(id) ? id : (unlocked.has(mapWorld) ? mapWorld : 'mochi');
+  const p = prog(mapWorld), w = WORLDS[mapWorld];
+  const total = Math.max(10, p.next + 2);
+  const done = Object.keys(p.stars).length, starSum = Object.values(p.stars).reduce((a, b) => a + b, 0);
+  const badges = SHOP_ORDER.map(wid => {
+    const ww = WORLDS[wid], locked = !unlocked.has(wid);
+    const dots = locked ? `<span class="lv-lockic">${LOCK_SVG}</span>` : `<i style="left:20%; top:28%; background:${ww.parts[0]}"></i><i style="left:46%; top:38%; background:${ww.parts[1]}"></i>`;
+    return `<button class="lv-badge${wid === mapWorld ? ' on' : ''}${locked ? ' locked' : ''}" id="lvb-${wid}" type="button" aria-label="${esc(ww.name)}${locked ? ', locked' : ''}">
+      <span class="lv-dot" style="background:${locked ? '#e4e7ea' : ww.card.bg}">${dots}</span>${SHORT[wid]}</button>`;
+  }).join('');
+  let nodes = '', path = [];
+  for (let L = 1; L <= total; L++){
+    const { x, y } = levelNodeXY(L);
+    path.push(`${x},${y + 30}`);
+    const st = p.stars[L] || 0;
+    let inner;
+    if (L < p.next){
+      const b = BAL_COLORS[(L - 1) % BAL_COLORS.length];
+      inner = `<span class="lv-bal" style="animation-delay:${(-L * .45).toFixed(2)}s">${balloonSvg(b[0], b[1], b[2])}<span class="lv-num">${L}</span><span class="lv-tick">${TICK_W}</span></span>
+        <span class="lv-stars">${starSvg(st >= 1, 15)}${starSvg(st >= 2, 15)}${starSvg(st >= 3, 15)}</span>`;
+    } else if (L === p.next){
+      inner = `<span class="lv-pulse"></span><span class="lv-cur">${L}</span><span class="lv-tag">Next up</span>`;
+    } else inner = `<span class="lv-lock">${LOCK_SVG}</span>`;
+    nodes += `<button class="lv-node" id="lvn-${L}" type="button" style="left:${x - 30}px; top:${y}px" aria-label="Level ${L}${L < p.next ? ', ' + st + ' stars' : L === p.next ? ', next up' : ', locked'}"${L > p.next ? ' disabled' : ''}>${inner}</button>`;
+  }
+  const mapH = levelNodeXY(total).y + 130;
+  let sheet = '';
+  if (replayL){
+    const st = p.stars[replayL] || 0, t = starTargets(replayL);
+    sheet = `<div class="ld-modal" role="dialog" aria-modal="true" aria-labelledby="rpTitle"><div class="ld-modal-card rp">
+      <span class="rp-world" style="color:${w.card.title}">${esc(w.name.toUpperCase())}</span>
+      <h3 id="rpTitle">Level ${replayL}</h3>
+      <div class="lv-big-stars">${starSvg(st >= 1, 34)}${starSvg(st >= 2, 34)}${starSvg(st >= 3, 34)}</div>
+      <div class="lv-stats"><div><small>BEST SCORE</small><b>${(p.best[replayL] || 0).toLocaleString()}</b></div><div><small>FEWEST SHOTS</small><b>${p.shots[replayL] || '-'}</b></div><div><small>3 STARS AT</small><b>${t.three} shots</b></div></div>
+      <p>${st >= 3 ? 'You have all 3 stars. Play again to beat your best score.' : `Clear it in ${t.three} shots or fewer to earn 3 stars.`}</p>
+      <button class="ld-btn primary" id="rpGo" type="button">Replay level ${replayL}</button>
+      <button class="ld-btn" id="rpClose" type="button">Close</button></div></div>`;
+  }
+  showLanding(`<div class="lv">
+    <div class="shop-top"><button class="shop-back" id="lvBack" type="button"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>Menu</button>
+      <span class="coin-pill"><i class="coin"></i>${coins.toLocaleString()}</span></div>
+    <h2 class="shop-title">Levels</h2>
+    <div class="lv-badges">${badges}</div>
+    <p class="lv-sum"><span style="font-family:${esc(w.css.display)}; color:${w.card.title}">${esc(w.name)}</span> · ${done} level${done === 1 ? '' : 's'} cleared · ${starSum} star${starSum === 1 ? '' : 's'}</p>
+    <div class="lv-map" id="lvMap"><div class="lv-inner" style="height:${mapH}px">
+      <svg class="lv-path" width="300" height="${mapH}" aria-hidden="true"><polyline points="${path.join(' ')}" fill="none" stroke="rgba(255,255,255,.85)" stroke-width="6" stroke-dasharray="2 12" stroke-linecap="round"/></svg>
+      ${nodes}</div></div>
+    <div class="lv-next"><span class="t"><small>NEXT UP · ${esc(w.name.toUpperCase())}</small><b>Level ${p.next}</b></span><button class="lv-play" id="lvPlay" type="button">Play</button></div>
+  </div>${sheet}`, false, 'page');
+  const map = document.getElementById('lvMap');
+  map.scrollTop = Math.max(0, levelNodeXY(p.next).y - map.clientHeight / 2 + 40);
+  const bar = document.querySelector('.lv-badges'), on = document.getElementById('lvb-' + mapWorld);
+  if (bar && on) bar.scrollLeft = Math.max(0, on.offsetLeft - bar.clientWidth / 2 + on.clientWidth / 2);
+  bind('lvBack', showMenu);
+  bind('lvPlay', () => startLevel(mapWorld, p.next));
+  SHOP_ORDER.forEach(wid => bind('lvb-' + wid, () => {
+    if (!unlocked.has(wid)){ shopFrom = 'levels'; shopNote = ''; showShop(); return; }
+    showLevels(wid);
+  }));
+  for (let L = 1; L <= Math.min(total, p.next); L++) bind('lvn-' + L, () => L === p.next ? startLevel(mapWorld, L) : showLevels(mapWorld, L));
+  if (replayL){
+    bind('rpGo', () => startLevel(mapWorld, replayL));
+    bind('rpClose', () => showLevels(mapWorld));
+    document.getElementById('rpGo').focus({ preventScroll:true });
+  } else document.getElementById('lvPlay').focus({ preventScroll:true });
+}
+
 const drift = () => world.twist === 'current' ? (level % 2 ? 1 : -1) * 605 : 0; // scaled with SPEED so the curve stays the same
 
-function loadBest(){ try { best = +localStorage.getItem('bubble-worlds-best-' + worldId) || 0; } catch(e){ best = 0; } }
+function loadBest(){ best = (prog(worldId).best || {})[level] || 0; }
 function neighbors(r, c){
   const d = shifted(r) ? [[-1,0],[-1,1],[0,-1],[0,1],[1,0],[1,1]] : [[-1,-1],[-1,0],[0,-1],[0,1],[1,-1],[1,0]];
   return d.map(([dr, dc]) => [r + dr, c + dc]).filter(([a, b]) => a >= 0 && b >= 0 && b < COLS);
 }
-function makeCell(c){ return { c, rot: worldId === 'paper' ? (Math.random() - .5) * .24 : 0, bloom: world.twist === 'bloom' && Math.random() < .1 }; }
+function makeCell(c){ return { c, rot: worldId === 'paper' ? (RNG() - .5) * .24 : 0, bloom: world.twist === 'bloom' && RNG() < .1 }; }
 function newRow(above){
   const row = [];
   for (let c = 0; c < COLS; c++){
     let v = rnd(nColors);
-    if (c > 0 && Math.random() < .35) v = row[c-1].c;
-    else if (above && above[c] && above[c].c >= 0 && Math.random() < .25) v = above[c].c;
+    const cl = D ? D.cluster : .35;
+    if (c > 0 && RNG() < cl) v = row[c-1].c;
+    else if (above && above[c] && above[c].c >= 0 && RNG() < cl * .7) v = above[c].c;
     row.push(makeCell(v));
   }
-  if (level >= 2) for (let c = 0; c < COLS; c++) if (Math.random() < .05) row[c] = { c:-1, k:'stone', rot:0, bloom:false };
+  const st = D ? D.stones : 0;
+  for (let c = 0; c < COLS; c++) if (RNG() < st) row[c] = { c:-1, k:'stone', rot:0, bloom:false };
   return row;
 }
 function boardColors(){
@@ -931,8 +1209,9 @@ function pickBubble(){
   const b = { c: pickColor(), frost:false, kind:null };
   if (world.twist === 'frost'){ frostIn--; if (frostIn <= 0){ frostIn = 6; b.frost = true; return b; } }
   const roll = Math.random();
-  if (roll < .06) b.kind = 'bomb';
-  else if (roll < .12) b.kind = 'rainbow';
+  const sp = D ? D.special : .12;
+  if (roll < sp / 2) b.kind = 'bomb';
+  else if (roll < sp) b.kind = 'rainbow';
   return b;
 }
 function newOrder(){
@@ -941,7 +1220,7 @@ function newOrder(){
 }
 function hud(){
   $score.textContent = score; $level.textContent = level;
-  if (score > best){ best = score; try { localStorage.setItem('bubble-worlds-best-' + worldId, best); } catch(e){} }
+  if (score > best) best = score;
   $best.textContent = best;
   if ($coins) $coins.textContent = coins.toLocaleString();
   $combo.textContent = '×' + Math.max(1, Math.min(combo, 5));
@@ -950,11 +1229,14 @@ function hud(){
 }
 function bumpCombo(){ $comboChip.classList.remove('bump'); void $comboChip.offsetWidth; $comboChip.classList.add('bump'); }
 function setupLevel(L){
-  level = L; nColors = Math.min(3 + L, 6);
-  const rows = Math.min(4 + L, 9);
-  allowed = Math.max(7 - L, 3); misses = 0; parity = 0; ceilOff = 0; shot = null; frostIn = 6;
+  level = L; D = difficulty(L); nColors = D.colors;
+  misses = 0; parity = 0; ceilOff = 0; shot = null; frostIn = 6;
+  score = 0; combo = 0; levelShots = 0; twistShots = 0; pendingRow = false; rowIn = D.dropEvery;
   grid = [];
-  for (let r = 0; r < rows; r++) grid.push(newRow(grid[r-1]));
+  RNG = seeded(hashStr(worldId + ':' + L));
+  for (let r = 0; r < D.rows; r++) grid.push(newRow(grid[r-1]));
+  RNG = Math.random;
+  loadBest();
   cur = pickBubble(); next = pickBubble();
   if (world.twist === 'order') newOrder();
   hud();
@@ -988,7 +1270,7 @@ function showCard(html, buttons){
 }
 function play(fromLevel){
   overlay.hidden = true; landing.hidden = true;
-  if (fromLevel){ score = 0; combo = 0; gameCoins = 0; setupLevel(1); }
+  if (fromLevel){ gameCoins = 0; setupLevel(typeof fromLevel === 'number' ? fromLevel : level); }
   state = 'play'; hud(); saveGame();
   canvas.focus({ preventScroll:true });
 }
@@ -1110,7 +1392,7 @@ function showShop(confirmId){
       <button class="ld-btn" id="cfNo" type="button">Not now</button></div></div>`;
   }
   showLanding(`<div class="shop">
-    <div class="shop-top"><button class="shop-back" id="shopBack" type="button"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>${shopFrom === 'picker' ? 'Back' : 'Menu'}</button>
+    <div class="shop-top"><button class="shop-back" id="shopBack" type="button"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>${shopFrom === 'menu' ? 'Menu' : 'Back'}</button>
       <span class="coin-pill"><i class="coin"></i>${coins.toLocaleString()} coins</span></div>
     <h2 class="shop-title">World Shop</h2>
     <p class="shop-sub">Earn coins as you play. Spend them on new worlds.</p>
@@ -1119,7 +1401,7 @@ function showShop(confirmId){
     <div class="shop-earn"><span>HOW TO EARN COINS</span><b>+1 coin for every bubble you pop</b><b>+25 coins for every level you clear</b><b>Combos multiply the coins from that shot</b></div>
   </div>${modal}`, false, 'page');
   ldPanel.querySelectorAll('canvas[data-world]').forEach(c => drawWorldPreview(c, WORLDS[c.dataset.world]));
-  bind('shopBack', () => { shopNote = ''; if (shopFrom === 'picker'){ state = 'pick'; showPicker(); } else { state = 'menu'; showMenu(); } });
+  bind('shopBack', () => { shopNote = ''; if (shopFrom === 'picker'){ state = 'pick'; showPicker(); } else if (shopFrom === 'levels'){ showLevels(mapWorld); } else { state = 'menu'; showMenu(); } });
   SHOP_ORDER.forEach(id => bind('buy-' + id, () => showShop(id)));
   if (confirmId){
     bind('cfNo', () => showShop());
@@ -1141,22 +1423,28 @@ function bestOverall(){
   return b;
 }
 function showMenu(){
-  const inGame = inGameNow();
-  menuResumable = inGame; pickerResumable = false; state = 'menu';
-  const used = slots.filter(Boolean).length;
-  showLanding(`${inGame ? '<button class="ld-btn resume" id="mResume" type="button">Resume</button>' : ''}
-    <button class="ld-btn play" id="mPlay" type="button">Play</button>
-    <button class="ld-btn load" id="mLoad" type="button">Load</button>
-    <button class="ld-btn shop" id="mShop" type="button"><span class="ld-btn-in">Shop${readyToBuy() ? `<span class="ld-tag">${readyToBuy()} world${readyToBuy() > 1 ? 's' : ''} ready</span>` : ''}</span></button>
-    <button class="ld-btn settings" id="mSettings" type="button">Settings</button>
-    <p class="ld-foot">Best ${bestOverall().toLocaleString()} · ${used} of 3 save slots used</p>
+  menuResumable = false; pickerResumable = false; state = 'menu';
+  const curSave = loadCurrent();
+  const resumeOk = curSave && WORLDS[curSave.worldId] && unlocked.has(curSave.worldId);
+  const id = resumeOk ? curSave.worldId : (unlocked.has(lastWorld) ? lastWorld : 'mochi');
+  const p = prog(id), w = WORLDS[id];
+  const contLevel = resumeOk ? curSave.level : p.next;
+  const done = Object.keys(p.stars).length, starSum = Object.values(p.stars).reduce((a, b) => a + b, 0);
+  const bar = Array.from({ length:10 }, (_, i) => `<span style="background:${i + 1 < p.next ? '#ff8a5c' : i + 1 === p.next ? '#ffc1d4' : 'rgba(36,50,74,.12)'}"></span>`).join('');
+  const fresh = !resumeOk && p.next === 1 && !done;
+  showLanding(`<div class="ld-prog"><div class="ld-prog-top"><span style="font-family:${esc(w.css.display)}; color:${w.card.title}">${esc(w.name)}</span><span>${done} level${done === 1 ? '' : 's'} · ${starSum} star${starSum === 1 ? '' : 's'}</span></div><div class="ld-bar">${bar}</div></div>
+    <div class="ld-btns">
+      <button class="ld-btn play" id="mCont" type="button"><span class="ld-btn-2">${fresh ? 'Play' : 'Continue'}<small>${esc(w.name)} · Level ${contLevel}</small></span></button>
+      <button class="ld-btn load" id="mLevels" type="button">Levels</button>
+      <button class="ld-btn shop" id="mShop" type="button"${readyToBuy() ? ' aria-label="Shop, you can afford a new world"' : ''}>Shop${readyToBuy() ? '<span class="ld-coinbadge" aria-hidden="true"></span>' : ''}</button>
+      <button class="ld-btn settings" id="mSettings" type="button">Settings</button>
+    </div>
     <p class="ld-tip">Aim and release to shoot. Tap NEXT to swap. Bombs blast nearby bubbles, rainbows match any color.</p>`);
-  bind('mResume', () => { menuResumable = false; play(false); });
-  bind('mPlay', newGame);
-  bind('mLoad', showLoad);
+  bind('mCont', () => resumeOk ? resumeCurrent(curSave) : startLevel(id, p.next));
+  bind('mLevels', () => showLevels(id));
   bind('mSettings', showSettings);
   bind('mShop', () => { shopFrom = 'menu'; shopNote = ''; showShop(); });
-  (document.getElementById('mResume') || document.getElementById('mPlay')).focus({ preventScroll:true });
+  document.getElementById('mCont').focus({ preventScroll:true });
 }
 function slotSummary(s){
   const w = WORLDS[s.worldId] || WORLDS.mochi;
@@ -1219,13 +1507,13 @@ function showLoad(){
 }
 function showSettings(){
   state = 'menu';
-  const canRestart = menuResumable && activeSlot >= 0;
+  const curSave = loadCurrent(), canRestart = !!(curSave && WORLDS[curSave.worldId]);
   showLanding(`<h3>Settings</h3>
     <div class="set-rows">
       <div class="set-row"><span>Music<small>A gentle tune for each world</small></span><button class="btn small${musicOn ? '' : ' ghost'}" id="setMusic" type="button" aria-pressed="${musicOn}">${musicOn ? 'On' : 'Off'}</button></div>
       <div class="set-row"><span>Sound effects<small>Pops, booms and chimes</small></span><button class="btn small${muted ? ' ghost' : ''}" id="setSfx" type="button" aria-pressed="${!muted}">${muted ? 'Off' : 'On'}</button></div>
       <div class="set-row"><span>Screen shake and flash<small>Bombs, new rows and big combos</small></span><button class="btn small${shakeOn ? '' : ' ghost'}" id="setShake" type="button" aria-pressed="${shakeOn}">${shakeOn ? 'On' : 'Off'}</button></div>
-      <div class="set-row"><span>Restart game<small>${canRestart ? `Start Save ${activeSlot + 1} again from level 1` : 'Start or load a game first'}</small></span><button class="btn small ghost" id="setRestart" type="button"${canRestart ? '' : ' disabled'}>Restart</button></div>
+      <div class="set-row"><span>Restart level<small>${canRestart ? `Start level ${curSave.level} of ${esc(WORLDS[curSave.worldId].name)} again` : 'Start a level first'}</small></span><button class="btn small ghost" id="setRestart" type="button"${canRestart ? '' : ' disabled'}>Restart</button></div>
     </div>
     <div class="row"><button class="btn ghost" id="setBack" type="button">Back</button></div>`, true);
   bind('setMusic', () => { setMusic(!musicOn); showSettings(); document.getElementById('setMusic').focus({ preventScroll:true }); });
@@ -1233,7 +1521,7 @@ function showSettings(){
   bind('setShake', () => { setShake(!shakeOn); showSettings(); document.getElementById('setShake').focus({ preventScroll:true }); });
   bind('setRestart', el => {
     if (el.dataset.armed !== '1'){ el.dataset.armed = '1'; el.textContent = 'Sure?'; el.classList.remove('ghost'); return; }
-    startNewIn(activeSlot);
+    startLevel(curSave.worldId, curSave.level);
   });
   bind('setBack', showMenu);
   document.getElementById('setMusic').focus({ preventScroll:true });
@@ -1286,25 +1574,6 @@ function showPicker(){
     else { state = 'menu'; showMenu(); }
   });
   document.getElementById('world-' + worldId).focus({ preventScroll:true });
-}
-function gameOver(){
-  state = 'over';
-  grid.forEach((row, r) => row.forEach((v, c) => {
-    if (v) falls.push({ x:cellX(r, c), y:cellY(r), vx:(Math.random() - .5)*160, vy:-Math.random()*200 - r*20, cell:v });
-  }));
-  grid = []; combo = 0; clearSave();
-  tone(400, .5, 'triangle', .1, .4);
-  setTimeout(() => showCard(`<h2>Oh no, the line was crossed!</h2><div class="big">${score}</div><p>You reached level ${level} in ${world.name}. Best: ${best}.</p><p>You earned <b>${gameCoins.toLocaleString()} coins</b> this game.</p>`,
-    [{ label:'Try again', go:() => play(true) }, { label:'Main menu', ghost:true, go:showMenu }]), 900);
-}
-function levelClear(){
-  state = 'clear';
-  const bonus = 250 * level; score += bonus; earnCoins(25); hud();
-  saveGame({ fresh:true, level: level + 1, grid: [] });
-  [523, 659, 784, 1046].forEach((f, i) => tone(f, .18, 'triangle', .1, 0, i*.09));
-  burst(W/2, H/2, 30, true);
-  setTimeout(() => showCard(`<h2>Level ${level} cleared!</h2><p>Clear bonus +${bonus} · +25 coins</p><div class="big">${score}</div>`,
-    [{ label:'Next level', go:() => { setupLevel(level + 1); play(false); } }, { label:'Change world', ghost:true, go:showPicker }]), 700);
 }
 
 // ---------- gameplay ----------
@@ -1416,7 +1685,7 @@ function bestRainbowColor(r, c){
   return bestC >= 0 ? bestC : pickColor();
 }
 function land(){
-  const s = shot; shot = null;
+  const s = shot; shot = null; levelShots++;
   const r0 = Math.round((s.y - TOP - R - ceilOff) / ROWH);
   let bestCell = null, bd = Infinity;
   for (let r = Math.max(0, r0 - 1); r <= r0 + 1; r++){
@@ -1486,6 +1755,8 @@ function land(){
     earnCoins(removed.length * mult, lx, ly);
     let gained = base * mult;
     floats.push({ x:lx, y:ly, text:'+' + gained, t:0 });
+    const quick = removed.filter(v => v.warn).length;
+    if (quick){ gained += quick*20; floats.push({ x:lx, y:ly - 46, text:'Quick! +' + quick*20, t:-.15, col:'#c98a12' }); }
     if (mult >= 3){
       rings.push({ x:lx, y:ly, t:0, gold:true });
       if (allowShake()){ flashT = clock; shake = Math.max(shake, 4); }
@@ -1512,9 +1783,10 @@ function land(){
     if (combo >= 2) floats.push({ x:lx, y:ly + 20, text:'Combo lost', t:0 });
     combo = 0;
     tone(190, .09, 'sine', .12, .6);
-    misses++;
-    if (misses >= allowed){ misses = 0; addRow(); }
   }
+  // A new row drops every few shots; misses bring it sooner.
+  rowIn -= popped ? 1 : 2;
+  if (rowIn <= 0){ rowIn = D ? D.dropEvery : 8; addRow(); }
   trim();
   // Only rocks left: they crumble away so the level can end.
   if (grid.length && !boardColors().length){
@@ -1535,6 +1807,7 @@ function land(){
       if (!grid.length || !boardColors().length){ grid = []; return levelClear(); }
     } else return gameOver();
   }
+  lateTwist(r, c);
   const cs = boardColors();
   if (!cs.includes(cur.c)) cur.c = pickColor();
   if (!cs.includes(next.c)) next.c = pickColor();
@@ -1574,12 +1847,7 @@ addEventListener('keydown', e => {
 });
 addEventListener('keyup', e => { keys[e.key] = false; });
 document.getElementById('menuBtn').addEventListener('click', () => { audio(); if (state !== 'menu') showMenu(); });
-document.getElementById('worldsBtn').addEventListener('click', () => {
-  audio();
-  if (state === 'play' || state === 'over' || state === 'clear') showPicker();
-  else if (state === 'menu' && !menuResumable) newGame();
-  else if (state === 'menu'){ menuResumable = false; state = 'play'; showPicker(); }
-});
+document.getElementById('worldsBtn').addEventListener('click', () => { audio(); if (state !== 'levels') showLevels(worldId); });
 
 // ---------- update ----------
 for (let i = 0; i < 14; i++) ambient.push({ x:Math.random()*W, y:TOP + Math.random()*(H - TOP), s:3 + Math.random()*7, v:18 + Math.random()*26, ph:Math.random()*TAU, rot:Math.random()*TAU });
@@ -1679,8 +1947,8 @@ function drawPanels(){
   panelBox(NBOX);
   label('NEXT', NX, NBOX.y + 16, P.muted);
   blitCell(next, NX, NY, .82, 1, next.frost);
-  const left = allowed - misses, gap = 9, x0 = NX - (allowed - 1)*gap/2;
-  for (let i = 0; i < allowed; i++){ circ(ctx, x0 + i*gap, NBOX.y + NBOX.h - 10, 3.2, i < left ? P.accent : 'rgba(128,128,128,.3)'); }
+  const total = D ? D.dropEvery : 8, left = Math.max(0, rowIn), gap = Math.min(9, 56 / total), x0 = NX - (total - 1)*gap/2;
+  for (let i = 0; i < total; i++){ circ(ctx, x0 + i*gap, NBOX.y + NBOX.h - 10, 3, i < left ? P.accent : 'rgba(128,128,128,.3)'); }
   // twist panel
   const b = TBOX, cx = b.x + b.w/2;
   panelBox(b);
@@ -1780,8 +2048,18 @@ function draw(){
         const k = clock - v.jg.t;
         if (k >= 0 && k < .45 && !reduceMotion){ const m = 5*Math.exp(-7*k)*Math.sin(k*30); ox = v.jg.x*m; oy = v.jg.y*m; } else delete v.jg;
       }
+      if (v.warn && !reduceMotion) ox += Math.sin(clock*24 + c)*1.6;
       blitCell(v, cellX(r, c) + wob + ox, y + oy, sx === 1 && sy === 1 ? 1 : [sx, sy]);
+      if (v.warn){
+        ctx.strokeStyle = 'rgba(255,190,40,' + (.6 + .4*Math.sin(clock*8)).toFixed(2) + ')'; ctx.lineWidth = 4; // gold, visible in every world
+        ctx.beginPath(); ctx.arc(cellX(r, c) + wob + ox, y + oy, R + 1, 0, TAU); ctx.stroke();
+      }
     }
+  }
+  if (pendingRow && grid[0]){
+    ctx.globalAlpha = .55 + .45*Math.sin(clock*8); ctx.fillStyle = '#ffffff'; ctx.font = '900 22px Nunito, sans-serif'; ctx.textAlign = 'center';
+    for (let c = 0; c < COLS; c += 2) ctx.fillText('›', cellX(0, c) + R, cellY(0) + 7);
+    ctx.globalAlpha = 1;
   }
   for (const p of pops) if (p.t > 0) blitCell(p.cell, p.x, p.y, 1 + p.t*2, Math.max(0, 1 - p.t/.3));
   for (const f of falls){
@@ -1859,11 +2137,11 @@ function frame(t){
   update(dt); draw();
   requestAnimationFrame(frame);
 }
-function snapshot(){ return { worldId, grid, parity, score, level, nColors, allowed, cur, next, misses, state, frostIn, order, combo, activeSlot }; }
+function snapshot(){ return { worldId, grid, parity, score, level, nColors, cur, next, state, frostIn, order, combo, rowIn, levelShots, twistShots, pendingRow }; }
 try { window.claude?.hot?.snapshot?.(snapshot); } catch(e){}
 
 // Every button press: a soft click (follows the Sound effects setting) and a tiny vibration where phones allow it.
-const PRESSABLE = ".ld-btn, .btn, .tool, .shop-buy, .shop-back, .world, .slot-main, .slot-del";
+const PRESSABLE = ".ld-btn, .btn, .tool, .shop-buy, .shop-back, .world, .slot-main, .slot-del, .lv-node:not(:disabled), .lv-badge, .lv-play";
 document.addEventListener("pointerdown", e => {
   const b = e.target.closest && e.target.closest(PRESSABLE);
   if (!b || b.disabled) return;
@@ -1876,9 +2154,9 @@ function start(data){
   if (live && WORLDS[data.worldId]){ worldId = data.worldId; world = WORLDS[worldId]; }
   applyWorldCss(); loadBest(); fit();
   if (live){
-    ({ grid, parity, score, level, nColors, allowed, cur, next, misses, frostIn, order } = data);
-    combo = data.combo || 0;
-    activeSlot = typeof data.activeSlot === 'number' ? data.activeSlot : -1;
+    ({ grid, parity, score, level, nColors, cur, next, frostIn, order } = data);
+    D = difficulty(level); combo = data.combo || 0; rowIn = data.rowIn || D.dropEvery;
+    levelShots = data.levelShots || 0; twistShots = data.twistShots || 0; pendingRow = !!data.pendingRow; loadBest();
     state = 'play'; overlay.hidden = true; hud();
   } else {
     setupLevel(1); hud(); state = 'menu'; showMenu();
