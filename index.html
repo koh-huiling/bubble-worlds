@@ -1242,7 +1242,9 @@ function showPicker(){
     <p class="pick-note">Locked worlds open the Shop when tapped.</p>
     <div class="row"><button class="btn ghost" id="keepBtn" type="button">${stay}</button></div></div>`, false, 'fade');
   const box = document.getElementById('worlds');
-  WORLD_IDS.forEach(id => {
+  // Unlocked worlds first, then locked ones from cheapest to most expensive.
+  const pickOrder = [...SHOP_ORDER].sort((x, y) => (unlocked.has(y) - unlocked.has(x)) || SHOP_ORDER.indexOf(x) - SHOP_ORDER.indexOf(y));
+  pickOrder.forEach(id => {
     const w = WORLDS[id], locked = !unlocked.has(id);
     let b = 0; try { b = +localStorage.getItem('bubble-worlds-best-' + id) || 0; } catch(e){}
     const btn = document.createElement('button');
