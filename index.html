@@ -206,6 +206,7 @@ html.phone-land .landing.page .ld-inner{display:flex; flex-direction:column; max
 .shop-earn span{font-size:11px; font-weight:900; letter-spacing:.1em; color:#5d6b80}
 .shop-earn b{font-size:13px; font-weight:800}
 .ld-modal{position:fixed; inset:0; z-index:60; display:flex; align-items:center; justify-content:center; padding:16px; background:rgba(36,50,74,.42)}
+.ld-modal[hidden]{display:none}
 .ld-modal-card{width:100%; max-width:340px; max-height:100%; overflow-x:hidden; overflow-y:auto; box-sizing:border-box; padding:0 20px 20px; border-radius:28px; background:#ffffff; color:#24324a;
   box-shadow:0 24px 50px -20px rgba(20,30,50,.7); display:flex; flex-direction:column; align-items:center; gap:10px}
 .cf-prev{position:relative; display:block; align-self:stretch; margin:0 -20px; height:110px; overflow:hidden}
@@ -271,6 +272,7 @@ html.tight-ui .ld-btn.primary, html.tight-ui .ld-btn.play, html.tight-ui .ld-btn
 .ld-prog{padding:11px 14px; border-radius:18px; background:rgba(255,255,255,.88); display:flex; flex-direction:column; gap:8px}
 .ld-prog-top{display:flex; justify-content:space-between; align-items:baseline; gap:8px; font-size:12px; font-weight:900; color:#5d6b80}
 .ld-prog-top span:first-child{font-size:17px}
+.ld-prog-title{font-family:'Righteous', Nunito, sans-serif; font-weight:400; color:#24324a}
 .ld-bar{display:grid; grid-template-columns:repeat(10, minmax(0, 1fr)); gap:4px}
 .ld-bar span{height:9px; border-radius:5px}
 html.tight-ui .ld-btns{gap:12px}
@@ -328,9 +330,27 @@ html.tight-ui .ld-prog{padding:8px 12px; gap:6px}
 @keyframes lvpulse{0%,100%{transform:scale(1); opacity:.7} 50%{transform:scale(1.25); opacity:0}}
 @keyframes glint{0%,100%{transform:scale(1)} 50%{transform:scale(1.12)}}
 @media (prefers-reduced-motion: reduce){ .lv-bal, .lv-pulse, .ld-coinbadge, .star-pop{animation:none} }
+/* Slim in-game header. */
+header.gbar, html.phone-ui header.gbar{display:flex; align-items:center; gap:10px; grid-template-columns:none}
+.gpause{flex:none; width:46px; height:46px; border:0; border-radius:50%; background:var(--chip); color:var(--accent); cursor:pointer;
+  display:flex; align-items:center; justify-content:center; box-shadow:0 4px 0 color-mix(in srgb, var(--accent) 35%, transparent);
+  transition:transform .38s cubic-bezier(.3,1.9,.5,1), box-shadow .38s cubic-bezier(.3,1.9,.5,1)}
+.gpause svg rect{fill:currentColor}
+.gpause:active{transform:translateY(4px) scale(.95); box-shadow:0 0 0 transparent; transition-duration:.05s}
+.gpause:focus-visible{outline:3px solid var(--accent); outline-offset:3px}
+.gmid{flex:1; min-width:0; display:flex; flex-direction:column; line-height:1.12}
+.glabel{font-size:11.5px; font-weight:900; letter-spacing:.05em; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.glabel #title{font-family:var(--display); font-weight:800; letter-spacing:0; font-size:14px; color:var(--title); text-shadow:var(--title-shadow)}
+.gscore{font-size:26px; font-weight:900; color:var(--ink); font-variant-numeric:tabular-nums}
+.gcoins{flex:none; display:flex; align-items:center; gap:6px; padding:6px 13px 6px 8px; border-radius:999px; background:var(--chip); border:2px solid var(--edge);
+  font-weight:900; font-size:15px; color:var(--ink); font-variant-numeric:tabular-nums}
+.gcoins.bump{animation:bump .3s}
+html.phone-land header.gbar{flex-direction:column; align-items:stretch}
+html.phone-land .gmid{flex:none}
+.pause-card{padding:22px 20px; align-items:stretch; gap:12px}
+.pause-card h3{text-align:center}
+.pause-sub{margin:-6px 0 4px !important; font-size:13px !important; color:#5d6b80 !important}
 </style>
-</head>
-<body>
 
 <div class="app">
   <div class="landing" id="landing" hidden>
@@ -350,20 +370,12 @@ html.tight-ui .ld-prog{padding:8px 12px; gap:6px}
       <div class="ld-panel" id="ldPanel"></div>
     </div>
   </div>
-  <header>
-    <h1 id="title">Bubble Worlds</h1>
-    <div class="stats">
-      <div class="chip"><span>Score</span><b id="score">0</b></div>
-      <div class="chip"><span>Level</span><b id="level">1</b></div>
-      <div class="chip"><span>Best</span><b id="best">0</b></div>
-      <div class="chip coins" id="coinChip"><span>Coins</span><b id="coins">0</b></div>
-      <div class="chip combo" id="comboChip"><span>Combo</span><b id="combo">×1</b><i class="meter"><i id="comboBar"></i></i></div>
-    </div>
-    <div class="tools">
-      <button class="tool primary" id="worldsBtn" type="button">Worlds</button>
-      <button class="tool" id="menuBtn" type="button">Menu</button>
-    </div>
+  <header class="gbar">
+    <button class="gpause" id="pauseBtn" type="button" aria-label="Pause"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1.5"/><rect x="14" y="5" width="4" height="14" rx="1.5"/></svg></button>
+    <div class="gmid"><span class="glabel">LEVEL <span id="level">1</span> · <span id="title">Bubble Worlds</span></span><b class="gscore" id="score">0</b></div>
+    <div class="gcoins" id="coinChip" aria-label="Coins"><i class="coin"></i><b id="coins">0</b></div>
   </header>
+  <div class="ld-modal" id="pauseLayer" hidden role="dialog" aria-modal="true" aria-labelledby="pauseTitle"><div class="ld-modal-card pause-card" id="pauseCard"></div></div>
   <div class="stage" id="stage">
     <div class="frame">
       <canvas id="game" tabindex="0" aria-label="Bubble shooter board"></canvas>
@@ -1232,13 +1244,16 @@ function newOrder(){
 function hud(){
   $score.textContent = score; $level.textContent = level;
   if (score > best) best = score;
-  $best.textContent = best;
+  if ($best) $best.textContent = best;
   if ($coins) $coins.textContent = coins.toLocaleString();
-  $combo.textContent = '×' + Math.max(1, Math.min(combo, 5));
-  $comboBar.style.width = (Math.min(combo, 5) / 5 * 100) + '%';
-  $comboChip.classList.toggle('hot', combo >= 2);
+  if ($combo){
+    $combo.textContent = '×' + Math.max(1, Math.min(combo, 5));
+    $comboBar.style.width = (Math.min(combo, 5) / 5 * 100) + '%';
+    $comboChip.classList.toggle('hot', combo >= 2);
+  }
 }
-function bumpCombo(){ $comboChip.classList.remove('bump'); void $comboChip.offsetWidth; $comboChip.classList.add('bump'); }
+let comboT = -9;
+function bumpCombo(){ comboT = clock; }
 function setupLevel(L){
   level = L; D = difficulty(L); nColors = D.colors;
   misses = 0; parity = 0; ceilOff = 0; shot = null; frostIn = 6;
@@ -1440,10 +1455,11 @@ function showMenu(){
   const id = resumeOk ? curSave.worldId : (unlocked.has(lastWorld) ? lastWorld : 'mochi');
   const p = prog(id), w = WORLDS[id];
   const contLevel = resumeOk ? curSave.level : p.next;
-  const done = Object.keys(p.stars).length, starSum = Object.values(p.stars).reduce((a, b) => a + b, 0);
-  const bar = Array.from({ length:10 }, (_, i) => `<span style="background:${i + 1 < p.next ? '#ff8a5c' : i + 1 === p.next ? '#ffc1d4' : 'rgba(36,50,74,.12)'}"></span>`).join('');
+  const done = Math.max(0, p.next - 1), starSum = Object.values(p.stars).reduce((a, b) => a + b, 0);
+  const base = Math.floor((p.next - 1) / 10) * 10;   // the bar shows the current block of 10 levels
+  const bar = Array.from({ length:10 }, (_, i) => { const L = base + i + 1; return `<span style="background:${L < p.next ? '#ff8a5c' : L === p.next ? '#ffc1d4' : 'rgba(36,50,74,.12)'}"></span>`; }).join('');
   const fresh = !resumeOk && p.next === 1 && !done;
-  showLanding(`<div class="ld-prog"><div class="ld-prog-top"><span style="font-family:${esc(w.css.display)}; color:${w.card.title}">${esc(w.name)}</span><span>${done} level${done === 1 ? '' : 's'} · ${starSum} star${starSum === 1 ? '' : 's'}</span></div><div class="ld-bar">${bar}</div></div>
+  showLanding(`<div class="ld-prog"><div class="ld-prog-top"><span class="ld-prog-title">Your progress</span><span>${done} level${done === 1 ? '' : 's'} · ${starSum} star${starSum === 1 ? '' : 's'}</span></div><div class="ld-bar">${bar}</div></div>
     <div class="ld-btns">
       <button class="ld-btn play" id="mCont" type="button"><span class="ld-btn-2">${fresh ? 'Play' : 'Continue'}<small>${esc(w.name)} · Level ${contLevel}</small></span></button>
       <button class="ld-btn load" id="mLevels" type="button">Levels</button>
@@ -1453,7 +1469,7 @@ function showMenu(){
     <p class="ld-tip">Aim and release to shoot. Tap NEXT to swap. Bombs blast nearby bubbles, rainbows match any color.</p>`);
   bind('mCont', () => resumeOk ? resumeCurrent(curSave) : startLevel(id, p.next));
   bind('mLevels', () => showLevels(id));
-  bind('mSettings', showSettings);
+  bind('mSettings', () => { settingsFrom = 'menu'; showSettings(); });
   bind('mShop', () => { shopFrom = 'menu'; shopNote = ''; showShop(); });
   document.getElementById('mCont').focus({ preventScroll:true });
 }
@@ -1534,7 +1550,7 @@ function showSettings(){
     if (el.dataset.armed !== '1'){ el.dataset.armed = '1'; el.textContent = 'Sure?'; el.classList.remove('ghost'); return; }
     startLevel(curSave.worldId, curSave.level);
   });
-  bind('setBack', showMenu);
+  bind('setBack', () => { if (settingsFrom === 'pause'){ settingsFrom = 'menu'; landing.hidden = true; showPause(); } else showMenu(); });
   document.getElementById('setMusic').focus({ preventScroll:true });
 }
 
@@ -1857,8 +1873,32 @@ addEventListener('keydown', e => {
   if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') e.preventDefault();
 });
 addEventListener('keyup', e => { keys[e.key] = false; });
-document.getElementById('menuBtn').addEventListener('click', () => { audio(); if (state !== 'menu') showMenu(); });
-document.getElementById('worldsBtn').addEventListener('click', () => { audio(); if (state !== 'pick') showPicker(); });
+const pauseLayer = document.getElementById('pauseLayer'), pauseCard = document.getElementById('pauseCard');
+let settingsFrom = 'menu';
+function hidePause(){ pauseLayer.hidden = true; }
+function showPause(){
+  state = 'paused'; aiming = false;
+  pauseCard.innerHTML = `<h3 id="pauseTitle">Paused</h3>
+    <p class="pause-sub">${esc(world.name)} · Level ${level} · Best ${best.toLocaleString()}</p>
+    <button class="ld-btn play" id="pResume" type="button">Resume</button>
+    <button class="ld-btn load" id="pWorld" type="button">Change world</button>
+    <button class="ld-btn settings" id="pLevels" type="button">Levels</button>
+    <button class="ld-btn shop" id="pSettings" type="button">Settings</button>
+    <button class="ld-btn" id="pMenu" type="button">Main menu</button>`;
+  pauseLayer.hidden = false;
+  bind('pResume', () => { hidePause(); state = 'play'; canvas.focus({ preventScroll:true }); });
+  bind('pWorld', () => { hidePause(); state = 'play'; showPicker(); });
+  bind('pLevels', () => { hidePause(); showLevels(worldId); });
+  bind('pSettings', () => { hidePause(); settingsFrom = 'pause'; showSettings(); });
+  bind('pMenu', () => { hidePause(); showMenu(); });
+  document.getElementById('pResume').focus({ preventScroll:true });
+}
+document.getElementById('pauseBtn').addEventListener('click', () => { audio(); if (state === 'play') showPause(); });
+addEventListener('keydown', e => {
+  if (e.key !== 'Escape' && e.key !== 'p') return;
+  if (state === 'play') showPause();
+  else if (state === 'paused'){ hidePause(); state = 'play'; }
+});
 
 // ---------- update ----------
 for (let i = 0; i < 14; i++) ambient.push({ x:Math.random()*W, y:TOP + Math.random()*(H - TOP), s:3 + Math.random()*7, v:18 + Math.random()*26, ph:Math.random()*TAU, rot:Math.random()*TAU });
@@ -2113,6 +2153,18 @@ function draw(){
   if (cur && !shot && state !== 'over') blitCell(cur, SX, SY + bob*.5, 1, 1, cur.frost);
   if (cur && next) drawPanels();
 
+  if (combo >= 2 && state === 'play'){
+    const k = clock - comboT, sc = k >= 0 && k < .35 && !reduceMotion ? 1 + .25*Math.exp(-8*k)*Math.cos(18*k) : 1;
+    const txt = 'Combo ×' + Math.min(combo, 5);
+    ctx.save(); ctx.translate(W/2, TOP + 22); ctx.scale(sc, sc);
+    ctx.font = '20px "Righteous", Nunito, sans-serif'; ctx.textAlign = 'center';
+    const bw = ctx.measureText(txt).width + 30;
+    ctx.fillStyle = '#ffffff'; rr(ctx, -bw/2 - 3, -17, bw + 6, 38, 19); ctx.fill();
+    ctx.fillStyle = '#d0582c'; rr(ctx, -bw/2, -11, bw, 32, 16); ctx.fill();
+    ctx.fillStyle = '#ff8a5c'; rr(ctx, -bw/2, -14, bw, 30, 15); ctx.fill();
+    ctx.fillStyle = '#24324a'; ctx.fillText(txt, 0, 8);
+    ctx.restore();
+  }
   // floating text
   ctx.textAlign = 'center'; ctx.lineJoin = 'round';
   ctx.font = `20px ${world.cfont}`;
@@ -2152,7 +2204,7 @@ function snapshot(){ return { worldId, grid, parity, score, level, nColors, cur,
 try { window.claude?.hot?.snapshot?.(snapshot); } catch(e){}
 
 // Every button press: a soft click (follows the Sound effects setting) and a tiny vibration where phones allow it.
-const PRESSABLE = ".ld-btn, .btn, .tool, .shop-buy, .shop-back, .world, .slot-main, .slot-del, .lv-node:not(:disabled), .lv-badge, .lv-play";
+const PRESSABLE = ".gpause, .ld-btn, .btn, .tool, .shop-buy, .shop-back, .world, .slot-main, .slot-del, .lv-node:not(:disabled), .lv-badge, .lv-play";
 document.addEventListener("pointerdown", e => {
   const b = e.target.closest && e.target.closest(PRESSABLE);
   if (!b || b.disabled) return;
