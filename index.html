@@ -97,7 +97,7 @@ html.phone-ui header{display:grid; grid-template-columns:minmax(0,1fr) auto; gap
 html.phone-ui h1{grid-column:1; grid-row:1; font-size:1.3rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
 html.phone-ui .tools{grid-column:2; grid-row:1; flex-wrap:nowrap}
 html.phone-ui .tool{padding:7px 11px; font-size:.8rem}
-html.phone-ui .stats{grid-column:1 / -1; grid-row:2; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:5px}
+html.phone-ui .stats{grid-column:1 / -1; grid-row:2; display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:4px}
 html.phone-ui .chip{min-width:0; padding:2px 4px; border-radius:12px}
 html.phone-ui .chip b{font-size:.95rem}
 html.phone-ui .frame, html.phone-ui canvas#game, html.phone-ui .overlay{border-radius:18px}
@@ -154,8 +154,102 @@ html.phone-land .ld-head{grid-column:1; grid-row:1}
 html.phone-land .ld-sky{grid-column:1; grid-row:2; min-height:0}
 html.phone-land .ld-panel{grid-column:2; grid-row:1 / span 2; align-self:center}
 html.phone-land .ld-title{font-size:40px}
+/* Coins and the World Shop. */
+.coin{display:inline-block; flex:none; width:1.1em; height:1.1em; border-radius:50%; vertical-align:-.18em;
+  background:radial-gradient(circle at 35% 30%, #fff1a8, #ffc93c 55%, #e09d1a); box-shadow:inset 0 0 0 .12em #e8a91e}
+.coin.dim{background:#cfd6de; box-shadow:none}
+.chip.coins b{display:flex; align-items:center; gap:4px}
+.chip.coins b::before{content:""; width:.8em; height:.8em; border-radius:50%; background:radial-gradient(circle at 35% 30%, #fff1a8, #ffc93c 55%, #e09d1a); box-shadow:inset 0 0 0 .1em #e8a91e}
+.ld-coins{position:absolute; z-index:2; top:calc(env(safe-area-inset-top, 0px) + 14px); right:16px; display:flex; align-items:center; gap:7px;
+  background:rgba(255,255,255,.85); border-radius:999px; padding:6px 14px 6px 8px; font-weight:900; font-size:15px; color:#24324a; font-variant-numeric:tabular-nums}
+.ld-btn.shop{display:flex; align-items:center; justify-content:center; gap:10px; border:2px solid #e8a91e; background:#fff6d6}
+.ld-btn.shop:hover{background:#fff0c2}
+.ld-tag{background:#24324a; color:#ffffff; font-size:11px; font-weight:900; border-radius:999px; padding:3px 9px}
+.ld-fade{position:absolute; inset:0; display:none; background:rgba(240,245,250,.62); -webkit-backdrop-filter:blur(3px); backdrop-filter:blur(3px)}
+.landing.fade .ld-fade{display:block}
+.landing.page .ld-head, .landing.page .ld-sky, .landing.page .ld-coins{display:none}
+.landing.page .ld-inner{padding:14px 14px 18px; max-width:480px}
+.landing.page .ld-panel{flex:1; min-height:0; overflow-y:auto; overscroll-behavior:contain}
+html.phone-land .landing.page .ld-inner{display:flex; flex-direction:column; max-width:520px; padding:12px 16px}
+.pick-card{margin-block:auto; background:#ffffff; border:1px solid rgba(36,50,74,.18); box-shadow:0 22px 48px -18px rgba(36,50,74,.55), 0 2px 6px rgba(36,50,74,.08)}
+.pick-card .worlds{width:100%}
+.pick-note{font-size:12px !important; color:#5d6b80 !important}
+.world{grid-template-columns:96px minmax(0,1fr) auto}
+.world > span.wlock{grid-column:3; grid-row:1 / span 4; display:flex; flex-direction:column; align-items:center; gap:2px; padding:0 4px; font-size:10.5px; font-weight:900; color:#5d6b80; text-align:center}
+.world.locked canvas{filter:grayscale(1); opacity:.55}
+.wnew{display:inline-block; vertical-align:2px; background:#ff8a5c; color:#ffffff; font-family:var(--body); font-size:9.5px; font-weight:900; letter-spacing:.08em; border-radius:999px; padding:1px 7px}
+.shop{display:flex; flex-direction:column; gap:10px; color:#24324a}
+.shop-top{display:flex; justify-content:space-between; align-items:center; gap:10px}
+.shop-back{display:flex; align-items:center; gap:4px; height:38px; padding:0 14px 0 10px; border:0; border-radius:999px; background:rgba(255,255,255,.85); color:#24324a; font:900 14px var(--body); cursor:pointer}
+.shop-back:focus-visible, .shop-buy:focus-visible{outline:3px solid #24324a; outline-offset:2px}
+.coin-pill{display:flex; align-items:center; gap:7px; background:rgba(255,255,255,.85); border-radius:999px; padding:6px 14px 6px 8px; font-weight:900; font-size:15px; font-variant-numeric:tabular-nums}
+.shop-title{margin:4px 0 0; text-align:center; font-family:"Righteous","Nunito",sans-serif; font-weight:400; font-size:38px; line-height:1; color:#ffffff; text-shadow:0 2px 12px rgba(36,50,74,.35)}
+.shop-sub{margin:0; text-align:center; font-size:14px; font-weight:800}
+.shop-note{margin:0; text-align:center; font-size:13px; font-weight:900; color:#2f7a52; background:#e3f4ea; border-radius:12px; padding:8px 10px}
+.shop-list{display:flex; flex-direction:column; gap:8px}
+.shop-card{display:grid; grid-template-columns:92px minmax(0,1fr) auto; align-items:center; gap:10px; padding:9px 10px; border-radius:18px; background:rgba(255,255,255,.92); box-shadow:0 8px 20px -14px rgba(36,50,74,.6)}
+.shop-prev{position:relative; display:block; height:32px; border-radius:10px; overflow:hidden}
+.shop-prev canvas{display:block; width:100%; height:100%}
+.shop-card.locked .shop-prev canvas{filter:grayscale(.85) opacity(.7)}
+.shop-lock{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#ffffff; background:rgba(36,50,74,.35)}
+.shop-text{display:flex; flex-direction:column; gap:2px; min-width:0}
+.shop-name{font-size:16px; line-height:1.15}
+.shop-tag{font-size:11.5px; font-weight:700; color:#5d6b80}
+.shop-act{display:flex; flex-direction:column; align-items:flex-end}
+.shop-owned{display:flex; align-items:center; gap:4px; padding:6px 11px; border-radius:999px; background:#e3f4ea; color:#2f7a52; font-size:12px; font-weight:900}
+.shop-buy{display:flex; align-items:center; gap:6px; height:38px; padding:0 14px 0 10px; border:0; border-radius:999px; background:#ff8a5c; color:#24324a; font:900 15px var(--body); cursor:pointer; box-shadow:0 4px 0 #d0582c; font-variant-numeric:tabular-nums}
+.shop-buy:active{transform:translateY(2px); box-shadow:0 2px 0 #d0582c}
+.shop-buy:disabled{background:#f1f4f7; color:#8592a5; box-shadow:none; border:1.5px solid #c9d4e0; cursor:default; transform:none}
+.shop-need{display:flex; flex-direction:column; align-items:flex-end; gap:3px}
+.shop-need small{font-size:10.5px; font-weight:800; color:#6b7789; white-space:nowrap}
+.shop-earn{display:flex; flex-direction:column; gap:5px; padding:12px 14px; border-radius:18px; background:rgba(255,255,255,.9)}
+.shop-earn span{font-size:11px; font-weight:900; letter-spacing:.1em; color:#5d6b80}
+.shop-earn b{font-size:13px; font-weight:800}
+.ld-modal{position:fixed; inset:0; z-index:60; display:flex; align-items:center; justify-content:center; padding:16px; background:rgba(36,50,74,.42)}
+.ld-modal-card{width:100%; max-width:340px; max-height:100%; overflow-x:hidden; overflow-y:auto; box-sizing:border-box; padding:0 20px 20px; border-radius:28px; background:#ffffff; color:#24324a;
+  box-shadow:0 24px 50px -20px rgba(20,30,50,.7); display:flex; flex-direction:column; align-items:center; gap:10px}
+.cf-prev{position:relative; display:block; align-self:stretch; margin:0 -20px; height:110px; overflow:hidden}
+.cf-prev canvas{display:block; width:100%; height:100%}
+.cf-name{position:absolute; left:0; right:0; bottom:10px; text-align:center; font-size:24px; color:#ffffff; text-shadow:0 2px 8px rgba(0,0,0,.45)}
+.ld-modal-card h3{text-align:center; line-height:1.15; margin:4px 0 0; font-family:"Righteous","Nunito",sans-serif; font-weight:400; font-size:26px}
+.ld-modal-card p{margin:0; text-align:center; font-size:14px; font-weight:700; line-height:1.45; color:#3d4b60}
+.cf-cost{display:flex; align-items:center; gap:16px; padding:10px 16px; border-radius:16px; background:#f3f7fb; font-variant-numeric:tabular-nums}
+.cf-cost span{display:flex; flex-direction:column; align-items:center}
+.cf-cost small{font-size:10px; font-weight:900; letter-spacing:.1em; color:#5d6b80}
+.cf-cost b{font-size:17px; font-weight:900}
+html.tight-ui .ld-inner{padding-top:44px}
+html.tight-ui .ld-title{font-size:42px}
+html.tight-ui .ld-btn{height:48px; font-size:17px}
+html.tight-ui .ld-btn.primary{height:52px; font-size:22px}
+html.tight-ui .ld-panel{gap:9px}
+html.tight-ui .ld-tip{display:none}
 @media (prefers-reduced-motion: reduce){ .ld-balloon{animation:none} }
 @media (prefers-reduced-motion: reduce){ .card{animation:none} .world:hover{transform:none} }
+/* Button feel: squish and spring. Buttons press down like real buttons, then bounce back up on release. */
+.ld-btn, .btn, .tool, .shop-buy, .shop-back, .world, .slot-main, .slot-del{
+  transition:transform .38s cubic-bezier(.3,1.9,.5,1), box-shadow .38s cubic-bezier(.3,1.9,.5,1), background-color .2s}
+@media (hover: hover){
+  .ld-btn:hover, .btn:hover:not(:disabled), .tool:hover, .shop-buy:hover:not(:disabled), .shop-back:hover, .world:hover, .slot-main:hover:not(:disabled){transform:translateY(-3px)}
+}
+.ld-btn:active, .btn:active:not(:disabled), .tool:active, .shop-buy:active:not(:disabled), .shop-back:active, .world:active,
+.slot-main:active:not(:disabled), .slot-del:active{transform:translateY(5px) scale(.97); transition-duration:.05s}
+.ld-btn.primary{box-shadow:0 7px 0 #d0582c, 0 14px 24px -10px rgba(208,88,44,.7)}
+.ld-btn.primary:active{box-shadow:0 1px 0 #d0582c, 0 4px 10px -6px rgba(208,88,44,.6)}
+.ld-btn:not(.primary):not(.shop){box-shadow:0 5px 0 rgba(36,50,74,.18)}
+.ld-btn:not(.primary):not(.shop):active{box-shadow:0 1px 0 rgba(36,50,74,.18)}
+.ld-btn.shop{box-shadow:0 5px 0 #c98a12}
+.ld-btn.shop:active{box-shadow:0 1px 0 #c98a12}
+.shop-buy:active:not(:disabled){box-shadow:0 1px 0 #d0582c}
+.btn{box-shadow:0 5px 0 color-mix(in srgb, var(--accent) 60%, #000)}
+.btn:active:not(:disabled){box-shadow:0 1px 0 color-mix(in srgb, var(--accent) 60%, #000)}
+.btn.ghost{box-shadow:inset 0 0 0 2px var(--edge), 0 4px 0 rgba(36,50,74,.12)}
+.btn.ghost:active{box-shadow:inset 0 0 0 2px var(--edge), 0 1px 0 rgba(36,50,74,.12)}
+.tool{box-shadow:0 3px 0 rgba(0,0,0,.12)}
+.tool:active{box-shadow:0 0 0 rgba(0,0,0,.12)}
+@media (prefers-reduced-motion: reduce){
+  .ld-btn, .btn, .tool, .shop-buy, .shop-back, .world, .slot-main, .slot-del{transition:none}
+  .ld-btn:hover, .btn:hover, .tool:hover, .shop-buy:hover, .shop-back:hover, .world:hover, .slot-main:hover{transform:none}
+}
 </style>
 </head>
 <body>
@@ -167,6 +261,8 @@ html.phone-land .ld-title{font-size:40px}
       <path d="M0 160 Q120 100 240 150 Q320 180 390 140 L390 374 L0 374 Z" fill="#d9c19a"></path>
       <path d="M0 230 Q90 190 200 220 Q300 250 390 210 L390 374 L0 374 Z" fill="#e7b3c1"></path>
     </svg>
+    <div class="ld-fade" aria-hidden="true"></div>
+    <div class="ld-coins" id="ldCoins" aria-label="Coins"><i class="coin"></i><b id="ldCoinsN">0</b></div>
     <div class="ld-inner">
       <div class="ld-head">
         <h2 class="ld-title">Bubble Worlds</h2>
@@ -182,6 +278,7 @@ html.phone-land .ld-title{font-size:40px}
       <div class="chip"><span>Score</span><b id="score">0</b></div>
       <div class="chip"><span>Level</span><b id="level">1</b></div>
       <div class="chip"><span>Best</span><b id="best">0</b></div>
+      <div class="chip coins" id="coinChip"><span>Coins</span><b id="coins">0</b></div>
       <div class="chip combo" id="comboChip"><span>Combo</span><b id="combo">×1</b><i class="meter"><i id="comboBar"></i></i></div>
     </div>
     <div class="tools">
@@ -204,7 +301,7 @@ const TAU = Math.PI * 2;
 // The board is always 420 wide; its height grows on tall phones (640 to 900) so it fills the screen.
 const R = 20, COLS = 10, W = COLS*2*R + R, BASE_H = 640, MAX_H = 900, ROWH = R*Math.sqrt(3), TOP = 16;
 let H = BASE_H, SY = H - 84, DEADLINE = SY - R - 22;
-const SX = W/2, SPEED = 950;
+const SX = W/2, SPEED = 1140; // shot speed in px per second (raised 20% from 950)
 const PAD = 6, SS = 2*R + PAD*2;
 const NBOX = { x:10, y:SY - 12, w:66, h:84 }, TBOX = { x:W - 116, y:SY - 12, w:106, h:84 };
 const NX = NBOX.x + NBOX.w/2;
@@ -640,6 +737,7 @@ function applyUi(){
   root.classList.toggle('phone-ui', ew <= 560 && !(ew > eh && eh <= 520));
   root.classList.toggle('phone-land', ew > eh && eh <= 520);
   root.classList.toggle('short-ui', eh <= 560);
+  root.classList.toggle('tight-ui', eh <= 720);
   if (k > 1){
     Object.assign(appEl.style, { position:'fixed', left:'0', top:'0', margin:'0', maxWidth:'none',
       width:(iw / k) + 'px', height:(ih / k) + 'px', transform:`scale(${k})`, transformOrigin:'0 0' });
@@ -791,7 +889,7 @@ const shifted = r => ((r + parity) & 1) === 1;
 const cellX = (r, c) => R + c*2*R + (shifted(r) ? R : 0);
 const cellY = r => TOP + R + r*ROWH + ceilOff;
 const get = (r, c) => (grid[r] && grid[r][c]) || null;
-const drift = () => world.twist === 'current' ? (level % 2 ? 1 : -1) * 420 : 0;
+const drift = () => world.twist === 'current' ? (level % 2 ? 1 : -1) * 605 : 0; // scaled with SPEED so the curve stays the same
 
 function loadBest(){ try { best = +localStorage.getItem('bubble-worlds-best-' + worldId) || 0; } catch(e){ best = 0; } }
 function neighbors(r, c){
@@ -832,6 +930,7 @@ function hud(){
   $score.textContent = score; $level.textContent = level;
   if (score > best){ best = score; try { localStorage.setItem('bubble-worlds-best-' + worldId, best); } catch(e){} }
   $best.textContent = best;
+  if ($coins) $coins.textContent = coins.toLocaleString();
   $combo.textContent = '×' + Math.max(1, Math.min(combo, 5));
   $comboBar.style.width = (Math.min(combo, 5) / 5 * 100) + '%';
   $comboChip.classList.toggle('hot', combo >= 2);
@@ -876,7 +975,7 @@ function showCard(html, buttons){
 }
 function play(fromLevel){
   overlay.hidden = true; landing.hidden = true;
-  if (fromLevel){ score = 0; combo = 0; setupLevel(1); }
+  if (fromLevel){ score = 0; combo = 0; gameCoins = 0; setupLevel(1); }
   state = 'play'; hud(); saveGame();
   canvas.focus({ preventScroll:true });
 }
@@ -904,10 +1003,110 @@ function balloonSvg(c1, c2, c3){
 }
 document.getElementById('ldBalloons').innerHTML = BALLOONS.map(([x, y, w, c1, c2, c3, op, d, dl]) =>
   `<div class="ld-balloon" style="left:${x}%; top:${y}%; width:calc(var(--bs,1) * ${w}px); height:calc(var(--bs,1) * ${w * 1.5}px); opacity:${op}; --d:${d}s; --dl:${dl}s">${balloonSvg(c1, c2, c3)}</div>`).join('');
-function showLanding(html, asCard){
-  overlay.hidden = true; landing.hidden = false; sizeSky();
-  ldPanel.innerHTML = asCard ? `<div class="ld-card">${html}</div>` : html;
+// ---------- coins, unlocked worlds and the World Shop (kept in this browser, shared by all save slots) ----------
+const PRICES = { sea:500, paper:800, sushi:1200 };
+const FREE_WORLDS = ['mochi', 'pond'];
+const SHOP_ORDER = ['mochi', 'pond', 'sea', 'paper', 'sushi'];
+let coins = 0, gameCoins = 0, shopFrom = 'menu', shopNote = '';
+const unlocked = new Set(FREE_WORLDS), newWorlds = new Set();
+try {
+  coins = Math.max(0, +localStorage.getItem('bubble-worlds-coins') || 0);
+  const u = JSON.parse(localStorage.getItem('bubble-worlds-unlocked') || '[]');
+  if (Array.isArray(u)) u.forEach(id => WORLDS[id] && unlocked.add(id));
+  const n = JSON.parse(localStorage.getItem('bubble-worlds-new') || '[]');
+  if (Array.isArray(n)) n.forEach(id => WORLDS[id] && newWorlds.add(id));
+} catch(e){}
+// Worlds a player already has saved games in stay playable.
+slots.forEach(s => { if (s && WORLDS[s.worldId]) unlocked.add(s.worldId); });
+const $coins = document.getElementById('coins'), $coinChip = document.getElementById('coinChip');
+const ldCoinsN = document.getElementById('ldCoinsN');
+function saveWallet(){
+  try {
+    localStorage.setItem('bubble-worlds-coins', String(coins));
+    localStorage.setItem('bubble-worlds-unlocked', JSON.stringify([...unlocked]));
+    localStorage.setItem('bubble-worlds-new', JSON.stringify([...newWorlds]));
+  } catch(e){}
 }
+function earnCoins(n){
+  if (!(n > 0)) return;
+  coins += n; gameCoins += n; saveWallet();
+  if ($coins) $coins.textContent = coins.toLocaleString();
+  if ($coinChip){ $coinChip.classList.remove('bump'); void $coinChip.offsetWidth; $coinChip.classList.add('bump'); }
+}
+function readyToBuy(){ return SHOP_ORDER.filter(id => !unlocked.has(id) && coins >= (PRICES[id] || 0)).length; }
+const LOCK_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2" fill="currentColor"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2.6"/></svg>';
+const TICK_SVG = '<svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5 9-10" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+function drawWorldPreview(pc, w){
+  const pg = pc.getContext('2d');
+  pg.setTransform(pc.width / 150, 0, 0, pc.height / 52, 0, 0);
+  pg.save(); pg.beginPath(); pg.rect(0, 0, 150, 52); pg.clip();
+  pg.save(); pg.scale(150 / W, 52 / (DEADLINE * .45)); pg.translate(0, -DEADLINE * .4); w.bg(pg); pg.restore();
+  [0, 1, 2, 3].forEach((i, k) => { pg.save(); pg.translate(30 + k*30, 27); pg.scale(.62, .62); w.bubble(pg, 0, 0, i, (k === 3) && (w.twist === 'frost' || w.twist === 'bloom')); pg.restore(); });
+  pg.restore();
+}
+
+function showLanding(html, asCard, mode){
+  overlay.hidden = true; landing.hidden = false;
+  landing.classList.toggle('page', !!mode);
+  landing.classList.toggle('fade', mode === 'fade');
+  if (ldCoinsN) ldCoinsN.textContent = coins.toLocaleString();
+  ldPanel.innerHTML = asCard ? `<div class="ld-card">${html}</div>` : html;
+  ldPanel.scrollTop = 0;
+  sizeSky();
+}
+
+function showShop(confirmId){
+  state = 'shop';
+  const cards = SHOP_ORDER.map(id => {
+    const w = WORLDS[id], owned = unlocked.has(id), price = PRICES[id] || 0;
+    let action;
+    if (owned) action = `<span class="shop-owned">${TICK_SVG}${FREE_WORLDS.includes(id) ? 'Free' : 'Unlocked'}</span>`;
+    else if (coins >= price) action = `<button class="shop-buy" id="buy-${id}" type="button" aria-label="Unlock ${esc(w.name)} for ${price} coins"><i class="coin"></i>${price.toLocaleString()}</button>`;
+    else action = `<span class="shop-need"><button class="shop-buy" type="button" disabled aria-label="${esc(w.name)} costs ${price} coins"><i class="coin dim"></i>${price.toLocaleString()}</button><small>Need ${(price - coins).toLocaleString()} more</small></span>`;
+    return `<div class="shop-card${owned ? '' : ' locked'}">
+      <span class="shop-prev"><canvas width="300" height="104" data-world="${id}" aria-hidden="true"></canvas>${owned ? '' : `<span class="shop-lock">${LOCK_SVG}</span>`}</span>
+      <span class="shop-text"><span class="shop-name" style="font-family:${esc(w.css.display)}; color:${w.card.title}">${esc(w.name)}${newWorlds.has(id) ? ' <span class="wnew">NEW</span>' : ''}</span><span class="shop-tag">${esc(w.tagline)}</span></span>
+      <span class="shop-act">${action}</span></div>`;
+  }).join('');
+  let modal = '';
+  if (confirmId){
+    const w = WORLDS[confirmId], price = PRICES[confirmId];
+    modal = `<div class="ld-modal" role="dialog" aria-modal="true" aria-labelledby="cfTitle"><div class="ld-modal-card">
+      <span class="cf-prev"><canvas width="600" height="208" data-world="${confirmId}" aria-hidden="true"></canvas></span>
+      <h3 id="cfTitle">Unlock <span style="font-family:${esc(w.css.display)}; color:${w.card.title}">${esc(w.name)}</span>?</h3>
+      <p>${esc(w.tagline)}. Once unlocked, it's yours to play anytime.</p>
+      <div class="cf-cost"><span><small>COST</small><b>${price.toLocaleString()}</b></span>
+        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="#8592a5" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span><small>YOU'LL HAVE</small><b>${(coins - price).toLocaleString()} coins</b></span></div>
+      <button class="ld-btn primary" id="cfYes" type="button">Unlock for ${price.toLocaleString()} coins</button>
+      <button class="ld-btn" id="cfNo" type="button">Not now</button></div></div>`;
+  }
+  showLanding(`<div class="shop">
+    <div class="shop-top"><button class="shop-back" id="shopBack" type="button"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>${shopFrom === 'picker' ? 'Back' : 'Menu'}</button>
+      <span class="coin-pill"><i class="coin"></i>${coins.toLocaleString()} coins</span></div>
+    <h2 class="shop-title">World Shop</h2>
+    <p class="shop-sub">Earn coins as you play. Spend them on new worlds.</p>
+    ${shopNote ? `<p class="shop-note" role="status">${esc(shopNote)}</p>` : ''}
+    <div class="shop-list">${cards}</div>
+    <div class="shop-earn"><span>HOW TO EARN COINS</span><b>+1 coin for every bubble you pop</b><b>+25 coins for every level you clear</b><b>Combos multiply the coins from that shot</b></div>
+  </div>${modal}`, false, 'page');
+  ldPanel.querySelectorAll('canvas[data-world]').forEach(c => drawWorldPreview(c, WORLDS[c.dataset.world]));
+  bind('shopBack', () => { shopNote = ''; if (shopFrom === 'picker'){ state = 'pick'; showPicker(); } else { state = 'menu'; showMenu(); } });
+  SHOP_ORDER.forEach(id => bind('buy-' + id, () => showShop(id)));
+  if (confirmId){
+    bind('cfNo', () => showShop());
+    bind('cfYes', () => {
+      const price = PRICES[confirmId];
+      if (coins < price || unlocked.has(confirmId)) return showShop();
+      coins -= price; unlocked.add(confirmId); newWorlds.add(confirmId); saveWallet(); hud();
+      [523, 659, 784, 1046].forEach((f, i) => tone(f, .16, 'triangle', .1, 0, i * .08));
+      shopNote = `${WORLDS[confirmId].name} unlocked! Pick it from Change world.`;
+      showShop();
+    });
+    document.getElementById('cfYes').focus({ preventScroll:true });
+  } else (document.getElementById('shopBack')).focus({ preventScroll:true });
+}
+
 function bestOverall(){
   let b = 0;
   for (const id of WORLD_IDS){ try { b = Math.max(b, +localStorage.getItem('bubble-worlds-best-' + id) || 0); } catch(e){} }
@@ -920,6 +1119,7 @@ function showMenu(){
   showLanding(`${inGame ? '<button class="ld-btn primary" id="mResume" type="button">Resume</button>' : ''}
     <button class="ld-btn${inGame ? '' : ' primary'}" id="mPlay" type="button">Play</button>
     <button class="ld-btn" id="mLoad" type="button">Load</button>
+    <button class="ld-btn shop" id="mShop" type="button">Shop${readyToBuy() ? `<span class="ld-tag">${readyToBuy()} world${readyToBuy() > 1 ? 's' : ''} ready</span>` : ''}</button>
     <button class="ld-btn" id="mSettings" type="button">Settings</button>
     <p class="ld-foot">Best ${bestOverall().toLocaleString()} · ${used} of 3 save slots used</p>
     <p class="ld-tip">Aim and release to shoot. Tap NEXT to swap. Bombs blast nearby bubbles, rainbows match any color.</p>`);
@@ -927,6 +1127,7 @@ function showMenu(){
   bind('mPlay', newGame);
   bind('mLoad', showLoad);
   bind('mSettings', showSettings);
+  bind('mShop', () => { shopFrom = 'menu'; shopNote = ''; showShop(); });
   (document.getElementById('mResume') || document.getElementById('mPlay')).focus({ preventScroll:true });
 }
 function slotSummary(s){
@@ -1009,29 +1210,33 @@ function showSettings(){
 }
 
 function showPicker(){
-  landing.hidden = true;
   const resumable = state === 'play' || (state === 'pick' && pickerResumable);
   const fromClear = state === 'clear' || (state === 'pick' && pickerFromClear);
   pickerResumable = resumable; pickerFromClear = fromClear;
   state = 'pick';
-  card.innerHTML = '<h2>Pick a world</h2><p>' + (resumable ? 'Your score, level and board come with you.' : 'Each world has its own bubbles and a special twist.') +
-    '</p><div class="worlds" id="worlds"></div>' + (resumable ? '<div class="row"><button class="btn ghost" id="keepBtn" type="button">Keep playing</button></div>' : '');
+  const intro = resumable ? 'Your score, level and board come with you.' : fromClear ? 'Pick where to play the next level.' : 'Each world has its own bubbles and a special twist.';
+  const stay = resumable ? 'Keep playing' : fromClear ? 'Stay in this world' : 'Back';
+  showLanding(`<div class="ld-card pick-card"><h3>Pick a world</h3><p>${intro}</p><div class="worlds" id="worlds"></div>
+    <p class="pick-note">Locked worlds open the Shop when tapped.</p>
+    <div class="row"><button class="btn ghost" id="keepBtn" type="button">${stay}</button></div></div>`, false, 'fade');
   const box = document.getElementById('worlds');
   WORLD_IDS.forEach(id => {
-    const w = WORLDS[id];
+    const w = WORLDS[id], locked = !unlocked.has(id);
     let b = 0; try { b = +localStorage.getItem('bubble-worlds-best-' + id) || 0; } catch(e){}
     const btn = document.createElement('button');
-    btn.type = 'button'; btn.className = 'world'; btn.id = 'world-' + id;
-    btn.style.cssText = `--wbg:${w.card.bg}; --wedge:${id === worldId ? w.css.accent : w.card.edge}; --wink:${w.card.ink}; --wtitle:${w.card.title}; --wfont:${w.css.display}`;
-    btn.innerHTML = `<canvas width="300" height="104" aria-hidden="true"></canvas>${id === worldId && resumable ? '<span class="wnow">Playing now</span>' : ''}<span class="wname">${w.name}</span><span class="wtwist">${w.tagline}</span><span class="wbest">Best ${b}</span>`;
-    const pc = btn.querySelector('canvas'), pg = pc.getContext('2d');
-    pg.scale(300/150, 104/52);
-    pg.save(); pg.beginPath(); pg.rect(0, 0, 150, 52); pg.clip();
-    pg.save(); pg.scale(150/W, 52/(DEADLINE*.45)); pg.translate(0, -DEADLINE*.4); w.bg(pg); pg.restore();
-    [0, 1, 2, 3].forEach((i, k) => { pg.save(); pg.translate(30 + k*30, 27); pg.scale(.62, .62); w.bubble(pg, 0, 0, i, (k === 3) && (w.twist === 'frost' || w.twist === 'bloom')); pg.restore(); });
-    pg.restore();
+    btn.type = 'button'; btn.className = 'world' + (locked ? ' locked' : ''); btn.id = 'world-' + id;
+    btn.style.cssText = locked
+      ? `--wbg:#f1f3f5; --wedge:#d8dde3; --wink:#6b7179; --wtitle:#7d8790; --wfont:${w.css.display}`
+      : `--wbg:${w.card.bg}; --wedge:${id === worldId ? w.css.accent : w.card.edge}; --wink:${w.card.ink}; --wtitle:${w.card.title}; --wfont:${w.css.display}`;
+    const tag = id === worldId && resumable ? '<span class="wnow">Playing now</span>' : newWorlds.has(id) && !locked ? '<span class="wnow"><span class="wnew">NEW</span></span>' : '';
+    btn.innerHTML = `<canvas width="300" height="104" aria-hidden="true"></canvas>${tag}<span class="wname">${w.name}</span><span class="wtwist">${w.tagline}</span>` +
+      (locked ? `<span class="wlock">${LOCK_SVG}Unlock ${(PRICES[id] || 0).toLocaleString()}</span>` : `<span class="wbest">Best ${b}</span>`);
+    if (locked) btn.setAttribute('aria-label', `${w.name}, locked. Unlock for ${PRICES[id]} coins in the Shop`);
+    drawWorldPreview(btn.querySelector('canvas'), w);
     btn.addEventListener('click', () => {
       audio();
+      if (locked){ shopFrom = 'picker'; shopNote = ''; showShop(); return; }
+      if (newWorlds.delete(id)) saveWallet();
       if (resumable){
         pickerResumable = false;
         if (id !== worldId){ setWorld(id); reskin(); }
@@ -1043,8 +1248,11 @@ function showPicker(){
     });
     box.appendChild(btn);
   });
-  if (resumable) document.getElementById('keepBtn').addEventListener('click', () => { audio(); pickerResumable = false; play(false); });
-  overlay.hidden = false;
+  bind('keepBtn', () => {
+    if (resumable){ pickerResumable = false; play(false); }
+    else if (fromClear){ pickerFromClear = false; setupLevel(level + 1); play(false); }
+    else { state = 'menu'; showMenu(); }
+  });
   document.getElementById('world-' + worldId).focus({ preventScroll:true });
 }
 function gameOver(){
@@ -1054,16 +1262,16 @@ function gameOver(){
   }));
   grid = []; combo = 0; clearSave();
   tone(400, .5, 'triangle', .1, .4);
-  setTimeout(() => showCard(`<h2>Oh no, the line was crossed!</h2><div class="big">${score}</div><p>You reached level ${level} in ${world.name}. Best: ${best}.</p>`,
+  setTimeout(() => showCard(`<h2>Oh no, the line was crossed!</h2><div class="big">${score}</div><p>You reached level ${level} in ${world.name}. Best: ${best}.</p><p>You earned <b>${gameCoins.toLocaleString()} coins</b> this game.</p>`,
     [{ label:'Try again', go:() => play(true) }, { label:'Main menu', ghost:true, go:showMenu }]), 900);
 }
 function levelClear(){
   state = 'clear';
-  const bonus = 250 * level; score += bonus; hud();
+  const bonus = 250 * level; score += bonus; earnCoins(25); hud();
   saveGame({ fresh:true, level: level + 1, grid: [] });
   [523, 659, 784, 1046].forEach((f, i) => tone(f, .18, 'triangle', .1, 0, i*.09));
   burst(W/2, H/2, 30, true);
-  setTimeout(() => showCard(`<h2>Level ${level} cleared!</h2><p>Clear bonus +${bonus}</p><div class="big">${score}</div>`,
+  setTimeout(() => showCard(`<h2>Level ${level} cleared!</h2><p>Clear bonus +${bonus} · +25 coins</p><div class="big">${score}</div>`,
     [{ label:'Next level', go:() => { setupLevel(level + 1); play(false); } }, { label:'Change world', ghost:true, go:showPicker }]), 700);
 }
 
@@ -1220,6 +1428,7 @@ function land(){
     base += blooms*50;
     combo++;
     const mult = Math.min(combo, 5);
+    earnCoins(removed.length * mult);
     let gained = base * mult;
     floats.push({ x:lx, y:ly, text:'+' + gained, t:0 });
     if (mult > 1){
@@ -1530,6 +1739,14 @@ function frame(t){
 function snapshot(){ return { worldId, grid, parity, score, level, nColors, allowed, cur, next, misses, state, frostIn, order, combo, activeSlot }; }
 try { window.claude?.hot?.snapshot?.(snapshot); } catch(e){}
 
+// Every button press: a soft click (follows the Sound effects setting) and a tiny vibration where phones allow it.
+const PRESSABLE = ".ld-btn, .btn, .tool, .shop-buy, .shop-back, .world, .slot-main, .slot-del";
+document.addEventListener("pointerdown", e => {
+  const b = e.target.closest && e.target.closest(PRESSABLE);
+  if (!b || b.disabled) return;
+  audio(); tone(440, .05, "triangle", .06, 1.6);
+  try { if (navigator.vibrate) navigator.vibrate(8); } catch(_){}
+}, true);
 function start(data){
   // A live viewer update keeps the game going; otherwise open on the main menu with Mochi Bakery behind it.
   const live = data && data.state === 'play' && Array.isArray(data.grid) && data.grid.length;
