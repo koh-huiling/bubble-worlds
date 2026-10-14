@@ -360,7 +360,7 @@ html.tight-ui .ld-prog{padding:8px 12px; gap:6px}
       <div class="chip combo" id="comboChip"><span>Combo</span><b id="combo">×1</b><i class="meter"><i id="comboBar"></i></i></div>
     </div>
     <div class="tools">
-      <button class="tool primary" id="worldsBtn" type="button">Levels</button>
+      <button class="tool primary" id="worldsBtn" type="button">Worlds</button>
       <button class="tool" id="menuBtn" type="button">Menu</button>
     </div>
   </header>
@@ -1002,8 +1002,19 @@ const PROG_KEY = 'bubble-worlds-progress', CUR_KEY = 'bubble-worlds-current';
 let progress = {}, lastWorld = 'mochi', mapWorld = 'mochi';
 try { progress = JSON.parse(localStorage.getItem(PROG_KEY) || '{}') || {}; } catch(e){ progress = {}; }
 try { lastWorld = localStorage.getItem('bubble-worlds-last') || 'mochi'; } catch(e){}
-function prog(id){
-  const p = progress[id] || (progress[id] = {});
+function prog(){
+  if (!progress.all){
+    const all = { next:1, stars:{}, best:{}, shots:{} };
+    for (const id of Object.keys(progress)){
+      const q = progress[id]; if (!q || typeof q !== "object") continue;
+      all.next = Math.max(all.next, q.next || 1);
+      for (const L in q.stars || {}) all.stars[L] = Math.max(all.stars[L] || 0, q.stars[L]);
+      for (const L in q.best || {}) all.best[L] = Math.max(all.best[L] || 0, q.best[L]);
+      for (const L in q.shots || {}) all.shots[L] = Math.min(all.shots[L] || 9999, q.shots[L]);
+    }
+    progress = { all };
+  }
+  const p = progress.all;
   p.next = p.next || 1; p.stars = p.stars || {}; p.best = p.best || {}; p.shots = p.shots || {};
   return p;
 }
@@ -1233,7 +1244,7 @@ function setupLevel(L){
   misses = 0; parity = 0; ceilOff = 0; shot = null; frostIn = 6;
   score = 0; combo = 0; levelShots = 0; twistShots = 0; pendingRow = false; rowIn = D.dropEvery;
   grid = [];
-  RNG = seeded(hashStr(worldId + ':' + L));
+  RNG = seeded(hashStr('level:' + L));
   for (let r = 0; r < D.rows; r++) grid.push(newRow(grid[r-1]));
   RNG = Math.random;
   loadBest();
@@ -1559,12 +1570,12 @@ function showPicker(){
       if (newWorlds.delete(id)) saveWallet();
       if (resumable){
         pickerResumable = false;
-        if (id !== worldId){ setWorld(id); reskin(); }
+        if (id !== worldId){ setWorld(id); reskin(); setLastWorld(id); }
         play(false);
       } else if (fromClear){
         pickerFromClear = false;
         setWorld(id); setupLevel(level + 1); play(false);
-      } else { setWorld(id); play(true); }
+      } else { startLevel(id, prog().next); }
     });
     box.appendChild(btn);
   });
@@ -1847,7 +1858,7 @@ addEventListener('keydown', e => {
 });
 addEventListener('keyup', e => { keys[e.key] = false; });
 document.getElementById('menuBtn').addEventListener('click', () => { audio(); if (state !== 'menu') showMenu(); });
-document.getElementById('worldsBtn').addEventListener('click', () => { audio(); if (state !== 'levels') showLevels(worldId); });
+document.getElementById('worldsBtn').addEventListener('click', () => { audio(); if (state !== 'pick') showPicker(); });
 
 // ---------- update ----------
 for (let i = 0; i < 14; i++) ambient.push({ x:Math.random()*W, y:TOP + Math.random()*(H - TOP), s:3 + Math.random()*7, v:18 + Math.random()*26, ph:Math.random()*TAU, rot:Math.random()*TAU });
