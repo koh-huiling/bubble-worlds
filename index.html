@@ -233,12 +233,6 @@ html.tight-ui .ld-tip{display:none}
 }
 .ld-btn:active, .btn:active:not(:disabled), .tool:active, .shop-buy:active:not(:disabled), .shop-back:active, .world:active,
 .slot-main:active:not(:disabled), .slot-del:active{transform:translateY(5px) scale(.97); transition-duration:.05s}
-.ld-btn.primary{box-shadow:0 7px 0 #d0582c, 0 14px 24px -10px rgba(208,88,44,.7)}
-.ld-btn.primary:active{box-shadow:0 1px 0 #d0582c, 0 4px 10px -6px rgba(208,88,44,.6)}
-.ld-btn:not(.primary):not(.shop){box-shadow:0 5px 0 rgba(36,50,74,.18)}
-.ld-btn:not(.primary):not(.shop):active{box-shadow:0 1px 0 rgba(36,50,74,.18)}
-.ld-btn.shop{box-shadow:0 5px 0 #c98a12}
-.ld-btn.shop:active{box-shadow:0 1px 0 #c98a12}
 .shop-buy:active:not(:disabled){box-shadow:0 1px 0 #d0582c}
 .btn{box-shadow:0 5px 0 color-mix(in srgb, var(--accent) 60%, #000)}
 .btn:active:not(:disabled){box-shadow:0 1px 0 color-mix(in srgb, var(--accent) 60%, #000)}
@@ -250,6 +244,20 @@ html.tight-ui .ld-tip{display:none}
   .ld-btn, .btn, .tool, .shop-buy, .shop-back, .world, .slot-main, .slot-del{transition:none}
   .ld-btn:hover, .btn:hover, .tool:hover, .shop-buy:hover, .shop-back:hover, .world:hover, .slot-main:hover{transform:none}
 }
+/* Main menu buttons: equal size, each in one world's color (matching the hills and balloons). */
+.ld-btn{--bg:rgba(255,255,255,.88); --shd:rgba(36,50,74,.18); --txt:#24324a; height:54px; border:0; background:var(--bg); color:var(--txt);
+  font:900 18px var(--body); box-shadow:0 5px 0 var(--shd); -webkit-backdrop-filter:none; backdrop-filter:none}
+.ld-btn:hover, .ld-btn.primary:hover, .ld-btn.shop:hover{background:var(--bg); filter:brightness(1.04)}
+.ld-btn:active{box-shadow:0 1px 0 var(--shd)}
+.ld-btn.primary, .ld-btn.play{--bg:#ff8a5c; --shd:#d0582c; --txt:#24324a; height:54px; font:400 22px "Righteous","Nunito",sans-serif}
+.ld-btn.resume{--bg:#f7b6c8; --shd:#d97895; --txt:#4a2333; font:400 22px "Righteous","Nunito",sans-serif}
+.ld-btn.load{--bg:#a9dbfa; --shd:#5aa3d6; --txt:#16324d}
+.ld-btn.shop{--bg:#ead6ad; --shd:#b8925a; --txt:#3d2c14; display:block; border:0; background:var(--bg)}
+.ld-btn.settings{--bg:#b4e2c4; --shd:#6fb38a; --txt:#1d3d2b}
+.ld-btn-in{display:inline-flex; align-items:center; justify-content:center; gap:10px; white-space:nowrap; max-width:100%}
+.ld-tag{flex:none; line-height:1.2}
+html.tight-ui .ld-btn, html.tight-ui .ld-btn.primary, html.tight-ui .ld-btn.play, html.tight-ui .ld-btn.resume{height:48px}
+html.tight-ui .ld-btn.primary, html.tight-ui .ld-btn.play, html.tight-ui .ld-btn.resume{font-size:20px}
 </style>
 </head>
 <body>
@@ -1136,11 +1144,11 @@ function showMenu(){
   const inGame = inGameNow();
   menuResumable = inGame; pickerResumable = false; state = 'menu';
   const used = slots.filter(Boolean).length;
-  showLanding(`${inGame ? '<button class="ld-btn primary" id="mResume" type="button">Resume</button>' : ''}
-    <button class="ld-btn${inGame ? '' : ' primary'}" id="mPlay" type="button">Play</button>
-    <button class="ld-btn" id="mLoad" type="button">Load</button>
-    <button class="ld-btn shop" id="mShop" type="button">Shop${readyToBuy() ? `<span class="ld-tag">${readyToBuy()} world${readyToBuy() > 1 ? 's' : ''} ready</span>` : ''}</button>
-    <button class="ld-btn" id="mSettings" type="button">Settings</button>
+  showLanding(`${inGame ? '<button class="ld-btn resume" id="mResume" type="button">Resume</button>' : ''}
+    <button class="ld-btn play" id="mPlay" type="button">Play</button>
+    <button class="ld-btn load" id="mLoad" type="button">Load</button>
+    <button class="ld-btn shop" id="mShop" type="button"><span class="ld-btn-in">Shop${readyToBuy() ? `<span class="ld-tag">${readyToBuy()} world${readyToBuy() > 1 ? 's' : ''} ready</span>` : ''}</span></button>
+    <button class="ld-btn settings" id="mSettings" type="button">Settings</button>
     <p class="ld-foot">Best ${bestOverall().toLocaleString()} · ${used} of 3 save slots used</p>
     <p class="ld-tip">Aim and release to shoot. Tap NEXT to swap. Bombs blast nearby bubbles, rainbows match any color.</p>`);
   bind('mResume', () => { menuResumable = false; play(false); });
