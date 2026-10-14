@@ -388,16 +388,16 @@ html.phone-land .gmid{flex:none}
 <script>
 (() => {
 const TAU = Math.PI * 2;
-// The board is always 420 wide; its height grows on tall phones (640 to 900) so it fills the screen.
-const R = 20, COLS = 10, W = COLS*2*R + R, BASE_H = 640, MAX_H = 900, ROWH = R*Math.sqrt(3), TOP = 16;
-let H = BASE_H, SY = H - 84, DEADLINE = Math.min(SY - R - 22, TOP + 2*R + 13*ROWH + 8);
-const SX = W/2, SPEED = 1140; // shot speed in px per second (raised 20% from 950)
+// The board is always 425 wide (8 bubbles a row); its height grows on tall phones (640 to 900) so it fills the screen.
+const R = 25, COLS = 8, W = COLS*2*R + R, BASE_H = 640, MAX_H = 900, ROWH = R*Math.sqrt(3), TOP = 16;
+let H = BASE_H, SY = H - 84, DEADLINE = SY - 2*R - 26;
+const SX = W/2, SPEED = 1254; // shot speed in px per second (950, then +20%, then +10%)
 const PAD = 6, SS = 2*R + PAD*2;
 const NBOX = { x:10, y:SY - 12, w:66, h:84 }, TBOX = { x:W - 116, y:SY - 12, w:106, h:84 };
 const NX = NBOX.x + NBOX.w/2;
 let NY = SY + 34;
 function setBoardHeight(h){
-  H = h; SY = H - 84; DEADLINE = Math.min(SY - R - 22, TOP + 2*R + 13*ROWH + 8);
+  H = h; SY = H - 84; DEADLINE = SY - 2*R - 26;
   NBOX.y = SY - 12; TBOX.y = SY - 12; NY = SY + 34;
 }
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -957,7 +957,7 @@ function setMusic(on){
 
 // ---------- state ----------
 let grid = [], parity = 0, score = 0, best = 0, level = 1, nColors = 4;
-let cur = null, next = null, misses = 0, allowed = 6, state = 'menu', rowIn = 8, levelShots = 0, D = null, twistShots = 0;
+let cur = null, next = null, misses = 0, allowed = 6, state = 'menu', rowIn = 8, rowsLeft = 0, levelShots = 0, D = null, twistShots = 0;
 let shot = null, ceilOff = 0, aimA = Math.PI/2, shake = 0, clock = 0, recoilT = -9, flashT = -9;
 const rings = [], coinFly = [];
 let frostIn = 6, order = [], pickerResumable = false, pickerFromClear = false, menuResumable = false, combo = 0;
@@ -975,7 +975,7 @@ try {
 } catch(e){}
 function writeSlots(){ try { localStorage.setItem(SLOTS_KEY, JSON.stringify(slots)); } catch(e){} }
 function saveGame(extra){
-  try { localStorage.setItem('bubble-worlds-current', JSON.stringify(Object.assign({ v:3, worldId, grid, parity, score, level, nColors, cur, next, rowIn, levelShots, frostIn, order, combo, twistShots, pendingRow }, extra || {}))); } catch(e){}
+  try { localStorage.setItem('bubble-worlds-current', JSON.stringify(Object.assign({ v:4, worldId, grid, parity, score, level, nColors, cur, next, rowIn, rowsLeft, levelShots, frostIn, order, combo, twistShots, pendingRow }, extra || {}))); } catch(e){}
 }
 function clearSave(){ try { localStorage.removeItem('bubble-worlds-current'); } catch(e){} }
 const pops = [], falls = [], parts = [], floats = [];
@@ -992,8 +992,9 @@ function difficulty(L){
   const breather = L >= 15 && L % 5 === 0;
   const e = Math.max(1, Math.min(L, 30) - (breather ? 2 : 0));
   return {
-    colors: Math.min(3 + e, 6),
-    rows: Math.min(4 + e, 9),
+    colors: e < 3 ? 4 : e < 16 ? 5 : 6,
+    rows: Math.min(3 + Math.ceil(e / 2), 7),
+    extraRows: e < 4 ? 1 : e < 10 ? 2 : 3,
     dropEvery: Math.max(5, 9 - Math.ceil(e / 3)),
     cluster: e < 7 ? .35 : Math.max(.12, .35 - (e - 6) * .012),
     stones: e < 2 ? 0 : Math.min(.12, .05 + Math.max(0, e - 15) * .005),
@@ -1040,7 +1041,9 @@ function setLastWorld(id){ lastWorld = id; try { localStorage.setItem('bubble-wo
     saveProgress(); localStorage.setItem('bubble-worlds-migrated', '1');
   } catch(e){}
 })();
-function loadCurrent(){ try { return JSON.parse(localStorage.getItem(CUR_KEY) || 'null'); } catch(e){ return null; } }
+// Boards saved before bubbles got bigger (10 a row) can't be resumed.
+const okGrid = g => Array.isArray(g) && g.length > 0 && g.every(row => Array.isArray(row) && row.length === COLS);
+function loadCurrent(){ try { const s = JSON.parse(localStorage.getItem(CUR_KEY) || 'null'); return s && okGrid(s.grid) ? s : null; } catch(e){ return null; } }
 
 // ---------- late world twists (from level 11): warned one shot ahead, never more than 1-2 bubbles ----------
 const TWIST_KIND = { sea:'shy', mochi:'toast', paper:'refold', pond:'hop', sushi:'conveyor' };
@@ -1091,7 +1094,7 @@ function resumeCurrent(s){
   setWorld(WORLDS[s.worldId] ? s.worldId : 'mochi'); setLastWorld(worldId);
   ({ grid, parity, score, level, nColors, cur, next, frostIn, order } = s);
   D = difficulty(level);
-  rowIn = s.rowIn || D.dropEvery; levelShots = s.levelShots || 0; twistShots = s.twistShots || 0;
+  rowIn = s.rowIn || D.dropEvery; rowsLeft = s.rowsLeft ?? D.extraRows; levelShots = s.levelShots || 0; twistShots = s.twistShots || 0;
   pendingRow = !!s.pendingRow; combo = s.combo || 0; gameCoins = 0; shot = null;
   loadBest(); play(false);
   floats.push({ x:W/2, y:H/2 - 80, text:`Welcome back! Level ${level}`, t:-.2 });
@@ -1201,7 +1204,7 @@ function showLevels(id, replayL){
   } else document.getElementById('lvPlay').focus({ preventScroll:true });
 }
 
-const drift = () => world.twist === 'current' ? (level % 2 ? 1 : -1) * 605 : 0; // scaled with SPEED so the curve stays the same
+const drift = () => world.twist === 'current' ? (level % 2 ? 1 : -1) * 666 : 0; // scaled with SPEED so the curve stays the same
 
 function loadBest(){ best = (prog(worldId).best || {})[level] || 0; }
 function neighbors(r, c){
@@ -1257,7 +1260,7 @@ function bumpCombo(){ comboT = clock; }
 function setupLevel(L){
   level = L; D = difficulty(L); nColors = D.colors;
   misses = 0; parity = 0; ceilOff = 0; shot = null; frostIn = 6;
-  score = 0; combo = 0; levelShots = 0; twistShots = 0; pendingRow = false; rowIn = D.dropEvery;
+  score = 0; combo = 0; levelShots = 0; twistShots = 0; pendingRow = false; rowIn = D.dropEvery; rowsLeft = D.extraRows;
   grid = [];
   RNG = seeded(hashStr('level:' + L));
   for (let r = 0; r < D.rows; r++) grid.push(newRow(grid[r-1]));
@@ -1812,8 +1815,10 @@ function land(){
     tone(190, .09, 'sine', .12, .6);
   }
   // A new row drops every few shots; misses bring it sooner.
-  rowIn -= popped ? 1 : 2;
-  if (rowIn <= 0){ rowIn = D ? D.dropEvery : 8; addRow(); }
+  if (rowsLeft > 0){
+    rowIn -= popped ? 1 : 2;
+    if (rowIn <= 0){ rowIn = D ? D.dropEvery : 8; rowsLeft--; addRow(); }
+  }
   trim();
   // Only rocks left: they crumble away so the level can end.
   if (grid.length && !boardColors().length){
@@ -1999,7 +2004,12 @@ function drawPanels(){
   label('NEXT', NX, NBOX.y + 16, P.muted);
   blitCell(next, NX, NY, .82, 1, next.frost);
   const total = D ? D.dropEvery : 8, left = Math.max(0, rowIn), gap = Math.min(9, 56 / total), x0 = NX - (total - 1)*gap/2;
-  for (let i = 0; i < total; i++){ circ(ctx, x0 + i*gap, NBOX.y + NBOX.h - 10, 3, i < left ? P.accent : 'rgba(128,128,128,.3)'); }
+  if (rowsLeft > 0){
+    for (let i = 0; i < total; i++){ circ(ctx, x0 + i*gap, NBOX.y + NBOX.h - 10, 3, i < left ? P.accent : 'rgba(128,128,128,.3)'); }
+    const bx = NBOX.x + NBOX.w - 4, by = NBOX.y + 4;
+    circ(ctx, bx, by, 11, '#ffffff'); circ(ctx, bx, by, 9, P.accent);
+    ctx.fillStyle = '#ffffff'; ctx.font = '900 11px Nunito, ui-rounded, sans-serif'; ctx.textAlign = 'center'; ctx.fillText('+' + rowsLeft, bx, by + 4);
+  } else { ctx.fillStyle = P.muted; ctx.font = '900 8px Nunito, ui-rounded, sans-serif'; ctx.textAlign = 'center'; ctx.fillText('NO MORE ROWS', NX, NBOX.y + NBOX.h - 7); }
   // twist panel
   const b = TBOX, cx = b.x + b.w/2;
   panelBox(b);
@@ -2200,7 +2210,7 @@ function frame(t){
   update(dt); draw();
   requestAnimationFrame(frame);
 }
-function snapshot(){ return { worldId, grid, parity, score, level, nColors, cur, next, state, frostIn, order, combo, rowIn, levelShots, twistShots, pendingRow }; }
+function snapshot(){ return { worldId, grid, parity, score, level, nColors, cur, next, state, frostIn, order, combo, rowIn, rowsLeft, levelShots, twistShots, pendingRow }; }
 try { window.claude?.hot?.snapshot?.(snapshot); } catch(e){}
 
 // Every button press: a soft click (follows the Sound effects setting) and a tiny vibration where phones allow it.
@@ -2213,12 +2223,12 @@ document.addEventListener("pointerdown", e => {
 }, true);
 function start(data){
   // A live viewer update keeps the game going; otherwise open on the main menu with Mochi Bakery behind it.
-  const live = data && data.state === 'play' && Array.isArray(data.grid) && data.grid.length;
+  const live = data && data.state === 'play' && okGrid(data.grid);
   if (live && WORLDS[data.worldId]){ worldId = data.worldId; world = WORLDS[worldId]; }
   applyWorldCss(); loadBest(); fit();
   if (live){
     ({ grid, parity, score, level, nColors, cur, next, frostIn, order } = data);
-    D = difficulty(level); combo = data.combo || 0; rowIn = data.rowIn || D.dropEvery;
+    D = difficulty(level); combo = data.combo || 0; rowIn = data.rowIn || D.dropEvery; rowsLeft = data.rowsLeft ?? D.extraRows;
     levelShots = data.levelShots || 0; twistShots = data.twistShots || 0; pendingRow = !!data.pendingRow; loadBest();
     state = 'play'; overlay.hidden = true; hud();
   } else {
