@@ -937,7 +937,7 @@ function musicNote(freq, t, dur, type, vol){
 function musicTick(){
   if (!ac || !musicOn || ac.state !== 'running') return;
   if (!musicGain){ musicGain = ac.createGain(); musicGain.gain.value = 1; musicGain.connect(ac.destination); }
-  const m = MUSIC[worldId], sd = 60 / m.bpm / 2;
+  const m = MUSIC[worldId], sd = 60 / (m.bpm * (feverLeft > 0 ? 1.3 : 1)) / 2;
   if (mNext < ac.currentTime) mNext = ac.currentTime + .05;
   while (mNext < ac.currentTime + .35){
     const n = m.mel[mStep % m.mel.length];
@@ -1004,10 +1004,10 @@ function difficulty(L){
     tight: e <= 20 ? 1 : 1 - Math.min(.15, (e - 20) * .015)
   };
 }
-// Every level starts with rows x 10 bubbles, so star targets come straight from the difficulty.
+// Star targets come from every bubble the level brings: the starting rows plus the extra rows.
 function starTargets(L){
-  const d = difficulty(L), n = d.rows * COLS;
-  return { three: Math.max(6, Math.round(n / 3.2 * d.tight)), two: Math.max(9, Math.round(n / 2.2 * d.tight)) };
+  const d = difficulty(L), n = (d.rows + d.extraRows) * COLS;
+  return { three: Math.max(6, Math.round(n / 2.3 * d.tight)), two: Math.max(9, Math.round(n / 1.5 * d.tight)) };
 }
 
 // ---------- per-world progress (this browser only) ----------
@@ -1095,7 +1095,7 @@ function resumeCurrent(s){
   ({ grid, parity, score, level, nColors, cur, next, frostIn, order } = s);
   D = difficulty(level);
   rowIn = s.rowIn || D.dropEvery; rowsLeft = s.rowsLeft ?? D.extraRows; levelShots = s.levelShots || 0; twistShots = s.twistShots || 0;
-  pendingRow = !!s.pendingRow; combo = s.combo || 0; gameCoins = 0; shot = null;
+  pendingRow = !!s.pendingRow; combo = s.combo || 0; gameCoins = 0; shot = null; feverLeft = 0;
   loadBest(); play(false);
   floats.push({ x:W/2, y:H/2 - 80, text:`Welcome back! Level ${level}`, t:-.2 });
 }
@@ -1257,10 +1257,20 @@ function hud(){
 }
 let comboT = -9;
 function bumpCombo(){ comboT = clock; }
+// Fever: every 5th match in a row gives a few seconds of double points and coins.
+const FEVER_SECS = 8;
+let feverLeft = 0, feverT = -9;
+function startFever(){
+  feverLeft = FEVER_SECS; feverT = clock;
+  floats.push({ x:W/2, y:H*.42, text:'FEVER! ×2', t:-.05, col:'#e8562a' });
+  [523, 659, 784, 1046, 1318].forEach((f, i) => tone(f, .14, 'triangle', .09, 0, i*.06));
+  burst(W/2, H*.42, 22, true);
+  if (allowShake()){ flashT = clock; shake = Math.max(shake, 6); }
+}
 function setupLevel(L){
   level = L; D = difficulty(L); nColors = D.colors;
   misses = 0; parity = 0; ceilOff = 0; shot = null; frostIn = 6;
-  score = 0; combo = 0; levelShots = 0; twistShots = 0; pendingRow = false; rowIn = D.dropEvery; rowsLeft = D.extraRows;
+  score = 0; combo = 0; levelShots = 0; twistShots = 0; pendingRow = false; rowIn = D.dropEvery; rowsLeft = D.extraRows; feverLeft = 0;
   grid = [];
   RNG = seeded(hashStr('level:' + L));
   for (let r = 0; r < D.rows; r++) grid.push(newRow(grid[r-1]));
@@ -1781,9 +1791,10 @@ function land(){
     const blooms = removed.filter(v => v.bloom).length;
     base += blooms*50;
     combo++;
-    const mult = Math.min(combo, 5);
-    earnCoins(removed.length * mult, lx, ly);
-    let gained = base * mult;
+    if (combo % 5 === 0 && feverLeft <= 0) startFever();
+    const mult = Math.min(combo, 5), fev = feverLeft > 0 ? 2 : 1;
+    earnCoins(removed.length * mult * fev, lx, ly);
+    let gained = base * mult * fev;
     floats.push({ x:lx, y:ly, text:'+' + gained, t:0 });
     const quick = removed.filter(v => v.warn).length;
     if (quick){ gained += quick*20; floats.push({ x:lx, y:ly - 46, text:'Quick! +' + quick*20, t:-.15, col:'#c98a12' }); }
@@ -1914,6 +1925,12 @@ function update(dt){
   ceilOff += (0 - ceilOff) * Math.min(1, dt*9);
   if (Math.abs(ceilOff) < .05) ceilOff = 0;
   shake = Math.max(0, shake - dt*30);
+  if (feverLeft > 0 && state === 'play'){
+    feverLeft -= dt;
+    if (shot && !reduceMotion && Math.random() < .7)
+      parts.push({ x:shot.x, y:shot.y, vx:(Math.random() - .5)*60, vy:(Math.random() - .5)*60, life:.7, col: Math.random() < .5 ? '#ffd23f' : '#ff7a3d', size:2.5 + Math.random()*3 });
+    if (feverLeft <= 0){ feverLeft = 0; floats.push({ x:W/2, y:H*.42, text:'Fever over', t:0 }); tone(392, .2, 'sine', .07, .8); }
+  }
   if (shot && state === 'play'){
     let dist = SPEED * dt;
     const dr = drift();
@@ -2009,7 +2026,7 @@ function drawPanels(){
     const bx = NBOX.x + NBOX.w - 4, by = NBOX.y + 4;
     circ(ctx, bx, by, 11, '#ffffff'); circ(ctx, bx, by, 9, P.accent);
     ctx.fillStyle = '#ffffff'; ctx.font = '900 11px Nunito, ui-rounded, sans-serif'; ctx.textAlign = 'center'; ctx.fillText('+' + rowsLeft, bx, by + 4);
-  } else { ctx.fillStyle = P.muted; ctx.font = '900 8px Nunito, ui-rounded, sans-serif'; ctx.textAlign = 'center'; ctx.fillText('NO MORE ROWS', NX, NBOX.y + NBOX.h - 7); }
+  } else { ctx.fillStyle = P.muted; ctx.font = '900 7px Nunito, ui-rounded, sans-serif'; ctx.textAlign = 'center'; ctx.fillText('NO MORE ROWS', NX, NBOX.y + NBOX.h - 7); }
   // twist panel
   const b = TBOX, cx = b.x + b.w/2;
   panelBox(b);
@@ -2163,7 +2180,24 @@ function draw(){
   if (cur && !shot && state !== 'over') blitCell(cur, SX, SY + bob*.5, 1, 1, cur.frost);
   if (cur && next) drawPanels();
 
-  if (combo >= 2 && state === 'play'){
+  if (feverLeft > 0 && state === 'play'){
+    const k = clock - feverT, pulse = reduceMotion ? .7 : .55 + .3*Math.sin(clock*9);
+    ctx.save();
+    ctx.lineWidth = 7; ctx.strokeStyle = `rgba(255,122,61,${pulse})`; ctx.shadowColor = '#ffb13d'; ctx.shadowBlur = 18;
+    rr(ctx, 3.5, 3.5, W - 7, H - 7, 22); ctx.stroke();
+    ctx.restore();
+    const sc = k < .4 && !reduceMotion ? 1 + .35*Math.exp(-7*k)*Math.cos(16*k) : 1;
+    ctx.save(); ctx.translate(W/2, TOP + 22); ctx.scale(sc, sc);
+    ctx.font = '20px "Righteous", Nunito, sans-serif'; ctx.textAlign = 'center';
+    const txt = 'FEVER ×2', bw = ctx.measureText(txt).width + 34;
+    ctx.fillStyle = '#ffffff'; rr(ctx, -bw/2 - 3, -17, bw + 6, 44, 20); ctx.fill();
+    ctx.fillStyle = '#c23d1c'; rr(ctx, -bw/2, -11, bw, 32, 16); ctx.fill();
+    ctx.fillStyle = '#ff7a3d'; rr(ctx, -bw/2, -14, bw, 30, 15); ctx.fill();
+    ctx.fillStyle = '#fff6d6'; ctx.fillText(txt, 0, 8);
+    ctx.fillStyle = 'rgba(194,61,28,.25)'; rr(ctx, -bw/2 + 8, 20, bw - 16, 5, 2.5); ctx.fill();
+    ctx.fillStyle = '#ffb13d'; rr(ctx, -bw/2 + 8, 20, (bw - 16) * Math.max(0, feverLeft / FEVER_SECS), 5, 2.5); ctx.fill();
+    ctx.restore();
+  } else if (combo >= 2 && state === 'play'){
     const k = clock - comboT, sc = k >= 0 && k < .35 && !reduceMotion ? 1 + .25*Math.exp(-8*k)*Math.cos(18*k) : 1;
     const txt = 'Combo ×' + Math.min(combo, 5);
     ctx.save(); ctx.translate(W/2, TOP + 22); ctx.scale(sc, sc);
